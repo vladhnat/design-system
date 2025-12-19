@@ -1,0 +1,19 @@
+name: Octomind E2E Tests
+
+on:
+  deployment_status: # This triggers when Vercel finishes a deployment
+
+jobs:
+  octomind:
+    # Only run if the deployment was successful
+    if: github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Octomind Tests
+        uses: OctoMind-dev/automagically-action-execute@v2
+        with:
+          # Automatically pulls the dynamic Vercel Preview URL
+          url: ${{ github.event.deployment_status.target_url }}
+          token: ${{ secrets.OCTOMIND_API_KEY }}
+          testTargetId: 96ce3c22-add9-4b72-8b31-5d9d0a19c11c
+          blocking: false
