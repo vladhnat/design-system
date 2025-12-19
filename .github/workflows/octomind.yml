@@ -28,7 +28,7 @@ jobs:
       - name: Run Octomind Tests
         uses: OctoMind-dev/automagically-action-execute@v2
         env:
-          # This action looks for this specific ENV VAR to find the PR ID
+          # This provides the PR ID to Octomind's engine manually
           OCTOMIND_PULL_REQUEST_NUMBER: ${{ steps.pr_number.outputs.result }}
         with:
           url: ${{ github.event.deployment_status.target_url }}
@@ -39,12 +39,11 @@ jobs:
       # 2. BATCH GENERATION
       - name: Octomind Batch Generation
         uses: OctoMind-dev/octomind-action-batch-generation@v1
+        env:
+          # Same variable here to ensure the generation report comments on the PR
+          OCTOMIND_PULL_REQUEST_NUMBER: ${{ steps.pr_number.outputs.result }}
         with:
-          # Use 'baseUrl' here, NOT 'url'
+          # This MUST be baseUrl, not url (fixes your image 2 error)
           baseUrl: ${{ github.event.deployment_status.target_url }}
           token: ${{ secrets.OCTOMIND_API_KEY }}
           testTargetId: 96ce3c22-add9-4b72-8b31-5d9d0a19c11c
-          # This action does NOT support 'pullRequestNumber' as an input
-          # It also relies on the environment variable
-        env:
-          OCTOMIND_PULL_REQUEST_NUMBER: ${{ steps.pr_number.outputs.result }}
