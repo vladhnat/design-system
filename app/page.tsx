@@ -46,6 +46,12 @@ import { Switch } from '@/components/ui/switch';
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -290,6 +296,55 @@ export default function Home() {
                   </Card>
                 </TabsContent>
               </Tabs>
+            </CardContent>
+          </Card>
+        </section>
+
+        {/* Accordion Section */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-semibold mb-6">Accordion</h2>
+          <Card>
+            <CardHeader>
+              <CardTitle>Collapsible Content</CardTitle>
+              <CardDescription>
+                Expand and collapse sections of content
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="item-1">
+                  <AccordionTrigger>Is it accessible?</AccordionTrigger>
+                  <AccordionContent>
+                    Yes. It adheres to the WAI-ARIA design pattern and is fully
+                    keyboard accessible. All components are built with
+                    accessibility in mind.
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="item-2">
+                  <AccordionTrigger>Is it styled?</AccordionTrigger>
+                  <AccordionContent>
+                    Yes. It comes with default styles that match the other
+                    components&apos; aesthetic. You can customize it using
+                    Tailwind CSS classes.
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="item-3">
+                  <AccordionTrigger>Is it animated?</AccordionTrigger>
+                  <AccordionContent>
+                    Yes. It includes smooth animations for opening and closing
+                    states. The animations are built using CSS transitions and
+                    are performant.
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="item-4">
+                  <AccordionTrigger>Can I use multiple items?</AccordionTrigger>
+                  <AccordionContent>
+                    Yes. You can configure the accordion to allow multiple items
+                    to be open at once, or restrict it to a single open item.
+                    The behavior is fully customizable.
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
             </CardContent>
           </Card>
         </section>
