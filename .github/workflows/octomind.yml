@@ -5,8 +5,7 @@ on:
 
 jobs:
   octomind:
-    # Only run if deployment was successful AND it is the production (main) environment
-    if: github.event.deployment_status.state == 'success' && github.event.deployment.environment == 'production'
+    if: github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -28,17 +27,18 @@ jobs:
       # 1. RUN EXISTING TESTS
       - name: Run Octomind Tests
         uses: OctoMind-dev/automagically-action-execute@v2
+        env:
+          # Force the ID into the environment for the bot
+          OCTOMIND_PULL_REQUEST_NUMBER: ${{ steps.pr_number.outputs.result }}
         with:
-          # Appending the bypass secret to the URL
           url: '${{ github.event.deployment_status.target_url }}?x-vercel-protection-bypass=${{ secrets.VERCEL_BYPASS_SECRET }}&x-vercel-set-bypass-cookie=true'
           token: ${{ secrets.OCTOMIND_API_KEY }}
           testTargetId: 96ce3c22-add9-4b72-8b31-5d9d0a19c11c
+          blocking: false
 
       # 2. BATCH GENERATION
       - name: Octomind Batch Generation
         uses: OctoMind-dev/octomind-action-batch-generation@v1
-        env:
-          OCTOMIND_PULL_REQUEST_NUMBER: ${{ steps.pr_number.outputs.result }}
         with:
           baseUrl: ${{ github.event.deployment_status.target_url }}
           token: ${{ secrets.OCTOMIND_API_KEY }}
