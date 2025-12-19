@@ -27,10 +27,6 @@ jobs:
             return prNumber;
           result-encoding: string
 
-      # --- NEW DEBUG STEP ---
-      - name: Check PR ID Output
-        run: echo "The script found PR ID ${{ steps.pr_number.outputs.result }}"
-
       # 1. RUN EXISTING TESTS
       - name: Run Octomind Tests
         uses: OctoMind-dev/automagically-action-execute@v2
