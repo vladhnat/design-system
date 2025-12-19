@@ -1,20 +1,18 @@
 name: Octomind E2E Tests
 
 on:
-  deployment_status: # Keeps tests synced with Vercel's live URL
+  deployment_status:
 
 jobs:
-  octomind:
+  # Job 1: Run your existing tests (already set up)
+  run-tests:
     if: github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
-
     permissions:
       contents: read
       pull-requests: read
-
     steps:
-      # Step to find the PR number associated with this deployment's commit
-      - name: Get Pull Request Number
+      - name: Get PR Number
         id: pr_number
         uses: actions/github-script@v7
         with:
@@ -33,6 +31,18 @@ jobs:
           url: ${{ github.event.deployment_status.target_url }}
           token: ${{ secrets.OCTOMIND_API_KEY }}
           testTargetId: 96ce3c22-add9-4b72-8b31-5d9d0a19c11c
-          # Pass the PR number found in the step above
           pullRequestNumber: ${{ steps.pr_number.outputs.result }}
-          blocking: false
+
+  # Job 2: Batch Generate new tests based on PR changes
+  generate-tests:
+    if: github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Octomind Batch Generation
+        uses: OctoMind-dev/octomind-action-batch-generation@v1
+        with:
+          url: ${{ github.event.deployment_status.target_url }}
+          token: ${{ secrets.OCTOMIND_API_KEY }}
+          testTargetId: 96ce3c22-add9-4b72-8b31-5d9d0a19c11c
+          # This tells the AI to look at the differences in this PR
+          pullRequestNumber: ${{ github.event.deployment.metadata.github_pr_id || github.event.number }}
