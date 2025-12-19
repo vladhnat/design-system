@@ -11,32 +11,39 @@ jobs:
       contents: read
       pull-requests: read
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      # Add any steps needed to deploy your application to a test environment
-      # ...
-
-      - name: Generate Octomind Tests
-        uses: octomind-dev/octomind-action-batch-generation@main
-        with:
-          token: ${{ secrets.octomind_API_KEY }}
-          testTargetId: 96ce3c22-add9-4b72-8b31-5d9d0a19c11c
-          baseUrl: https://your-deployment-url.example.com
-          # Optional parameters
-          # entrypointUrlPath: /some/path
-          # environmentId: your-environment-id
-          # prerequisiteId: your-prerequisite-test-id
-      - name: Show Batch Gen as PR comment
+      - name: Get PR Number
+        id: pr_number
         uses: actions/github-script@v7
-        env:
-          BATCH_GEN_URL: ${{ steps.batch-gen.outputs.batchGenerationUrl }}
         with:
-          github-token: ${{ github.token }}
           script: |
-            await github.rest.issues.createComment({
+            const prs = await github.rest.repos.listPullRequestsAssociatedWithCommit({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: context.payload.pull_request.number,
-              body: `# 🐙 Octomind Batch Generation\n\n[View your batch generation results](${process.env.BATCH_GEN_URL})`,
+              commit_sha: context.sha,
             });
+            return prs.data.length > 0 ? prs.data[0].number : '';
+          result-encoding: string
+
+      # 1. RUN EXISTING TESTS
+      - name: Run Octomind Tests
+        uses: OctoMind-dev/automagically-action-execute@v2
+        env:
+          # This provides the PR ID to Octomind's engine manually
+          OCTOMIND_PULL_REQUEST_NUMBER: ${{ steps.pr_number.outputs.result }}
+        with:
+          url: ${{ github.event.deployment_status.target_url }}
+          token: ${{ secrets.OCTOMIND_API_KEY }}
+          testTargetId: 96ce3c22-add9-4b72-8b31-5d9d0a19c11c
+          blocking: false
+
+      # 2. BATCH GENERATION
+      - name: Octomind Batch Generation
+        uses: OctoMind-dev/octomind-action-batch-generation@v1
+        env:
+          # Same variable here to ensure the generation report comments on the PR
+          OCTOMIND_PULL_REQUEST_NUMBER: ${{ steps.pr_number.outputs.result }}
+        with:
+          # This MUST be baseUrl, not url (fixes your image 2 error)
+          baseUrl: ${{ github.event.deployment_status.target_url }}
+          token: ${{ secrets.OCTOMIND_API_KEY }}
+          testTargetId: 96ce3c22-add9-4b72-8b31-5d9d0a19c11c
