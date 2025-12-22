@@ -42,18 +42,18 @@ jobs:
           testTargetId: 96ce3c22-add9-4b72-8b31-5d9d0a19c11c
           blocking: false
 
-      # 2. BATCH GENERATION (Safe Version)
+      # 2. BATCH GENERATION (Final Fixed Version)
       - name: Octomind Batch Generation
         if: steps.pr_details.outputs.number != 'NONE'
         env:
-          # Mapping outputs to env vars prevents shell injection
+          # Use Environment Variables to safely handle backticks/quotes
           PR_TITLE: ${{ steps.pr_details.outputs.title }}
           PR_BODY: ${{ steps.pr_details.outputs.body }}
-          OCTOMIND_TOKEN: ${{ secrets.OCTOMIND_API_KEY }}
+          TARGET_URL: "${{ github.event.deployment_status.target_url }}?x-vercel-protection-bypass=${{ secrets.VERCEL_BYPASS_SECRET }}&x-vercel-set-bypass-cookie=true"
         run: |
-          # Use the environment variables inside double quotes in the script
+          # Use the --api-key flag and reference env vars with $
           npx @octomind/octomind batch-generation \
-            --token "$OCTOMIND_TOKEN" \
-            --test-target-id 96ce3c22-add9-4b72-8b31-5d9d0a19c11c \
-            --url "${{ github.event.deployment_status.target_url }}?x-vercel-protection-bypass=${{ secrets.VERCEL_BYPASS_SECRET }}&x-vercel-set-bypass-cookie=true" \
-            --prompt "PR Title: $PR_TITLE. PR Description: $PR_BODY. Please discover new pages and generate tests for the new user journeys."
+            --api-key "${{ secrets.OCTOMIND_API_KEY }}" \
+            --test-target-id "96ce3c22-add9-4b72-8b31-5d9d0a19c11c" \
+            --url "$TARGET_URL" \
+            --prompt "PR Title: $PR_TITLE. PR Description: $PR_BODY. Please discover the new pages and generate tests for the new user journeys."
