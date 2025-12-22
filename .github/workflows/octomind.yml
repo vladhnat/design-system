@@ -60,6 +60,14 @@ jobs:
           blocking: false
 
       # 2. BATCH GENERATION
+      - name: Initialize Octomind CLI
+        run: |
+          # Initialize CLI with API key and test target ID
+          npx -y @octomind/octomind init \
+            --api-key "${{ secrets.OCTOMIND_API_KEY }}" \
+            --test-target-id 96ce3c22-add9-4b72-8b31-5d9d0a19c11c \
+            --force
+
       - name: Get Default Environment ID
         id: env_id
         uses: actions/github-script@v7
@@ -67,9 +75,9 @@ jobs:
           script: |
             const { execSync } = require('child_process');
             
-            // Get environments list
+            // Get environments list (no --api-key needed, uses config from init)
             const envJson = execSync(
-              `npx -y @octomind/octomind list-environments --api-key "${{ secrets.OCTOMIND_API_KEY }}" --test-target-id 96ce3c22-add9-4b72-8b31-5d9d0a19c11c --json`,
+              `npx -y @octomind/octomind list-environments --test-target-id 96ce3c22-add9-4b72-8b31-5d9d0a19c11c --json`,
               { encoding: 'utf-8' }
             );
             
@@ -110,8 +118,8 @@ jobs:
           fi
           
           # Run batch generation with PR context via CLI
+          # Uses config from init step, no --api-key needed
           npx -y @octomind/octomind batch-generation \
-            --api-key "${{ secrets.OCTOMIND_API_KEY }}" \
             --test-target-id 96ce3c22-add9-4b72-8b31-5d9d0a19c11c \
             --environment-id "${{ steps.env_id.outputs.env_id }}" \
             --url '${{ github.event.deployment_status.target_url }}?x-vercel-protection-bypass=${{ secrets.VERCEL_BYPASS_SECRET }}&x-vercel-set-bypass-cookie=true' \
