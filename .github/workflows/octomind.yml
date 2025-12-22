@@ -104,19 +104,21 @@ jobs:
             core.setOutput('env_id', envId);
 
       - name: Octomind Batch Generation
+        env:
+          PR_TITLE: ${{ steps.pr_info.outputs.title }}
+          PR_BODY: ${{ steps.pr_info.outputs.body }}
         run: |
-          # Construct prompt with PR context
-          PR_TITLE="${{ steps.pr_info.outputs.title }}"
-          PR_BODY="${{ steps.pr_info.outputs.body }}"
-          
-          # Build the prompt with PR context
+          # Construct prompt with PR context using heredoc to handle special characters
           if [ -n "$PR_TITLE" ] || [ -n "$PR_BODY" ]; then
-            PROMPT="PR Title: ${PR_TITLE:-N/A}
+            PROMPT=$(cat <<EOF
+          PR Title: ${PR_TITLE:-N/A}
           
           PR Description:
           ${PR_BODY:-N/A}
           
-          Please generate comprehensive end-to-end tests based on the changes described in this pull request."
+          Please generate comprehensive end-to-end tests based on the changes described in this pull request.
+          EOF
+          )
           else
             PROMPT="Generate comprehensive end-to-end tests for this deployment."
           fi
