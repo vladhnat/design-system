@@ -62,8 +62,9 @@ jobs:
       # 2. BATCH GENERATION
       - name: Initialize Octomind CLI
         run: |
-          # Create .config directory if it doesn't exist
+          # Create .config directory and empty config file if it doesn't exist
           mkdir -p ~/.config
+          echo '{}' > ~/.config/octomind.json
           
           # Initialize CLI with API key and test target ID
           npx -y @octomind/octomind init \
