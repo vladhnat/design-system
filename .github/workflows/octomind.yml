@@ -12,7 +12,7 @@ jobs:
       contents: read
       pull-requests: read
     steps:
-      # 1. FETCH PR DATA (deployment_status event doesn't include PR body/title by default)
+      # 1. FETCH PR DATA (deployment_status event doesn't include PR body/title)
       - name: Fetch PR Details
         id: pr_details
         uses: actions/github-script@v7
@@ -27,7 +27,7 @@ jobs:
               const pr = prs.data[0];
               core.setOutput('number', pr.number);
               core.setOutput('title', pr.title);
-              // Sanitize body: replace backticks to prevent shell injection errors
+              // Sanitize body: replace backticks to prevent shell injection, limit length
               const cleanBody = pr.body ? pr.body.replace(/`/g, "'").substring(0, 1500) : "No description provided";
               core.setOutput('body', cleanBody);
             } else {
@@ -42,25 +42,27 @@ jobs:
         with:
           url: '${{ github.event.deployment_status.target_url }}?x-vercel-protection-bypass=${{ secrets.VERCEL_BYPASS_SECRET }}&x-vercel-set-bypass-cookie=true'
           token: ${{ secrets.OCTOMIND_API_KEY }}
-          testTargetId: "96ce3c22-add9-4b72-8b31-5d9d0a19c11c"
+          testTargetId: 96ce3c22-add9-4b72-8b31-5d9d0a19c11c
           blocking: false
 
-      # 3. CLI BATCH GENERATION (To discover and test NEW pages/journeys)
+      # 3. CLI BATCH GENERATION (To discover and test NEW pages)
       - name: Octomind Discovery & Generation
         if: steps.pr_details.outputs.number != 'NONE'
         env:
+          # Mapping to env vars prevents backticks in PR body from executing as commands
           PR_TITLE: ${{ steps.pr_details.outputs.title }}
           PR_BODY: ${{ steps.pr_details.outputs.body }}
           OCTOMIND_API_KEY: ${{ secrets.OCTOMIND_API_KEY }}
           TARGET_URL: "${{ github.event.deployment_status.target_url }}?x-vercel-protection-bypass=${{ secrets.VERCEL_BYPASS_SECRET }}&x-vercel-set-bypass-cookie=true"
         run: |
-          # Initialize CLI with API Key to avoid authentication errors
+          # 1. Initialize CLI with API Key (Required to prevent "API key is required" error)
           npx @octomind/octomind init \
             --api-key "$OCTOMIND_API_KEY" \
             --test-target-id "96ce3c22-add9-4b72-8b31-5d9d0a19c11c"
           
-          # Trigger Batch Generation using a prompt for new user flows
+          # 2. Trigger Batch Generation with the PR Prompt
+          # This tells the AI Agent specifically what changed so it finds new pages
           npx @octomind/octomind batch-generation \
             --test-target-id "96ce3c22-add9-4b72-8b31-5d9d0a19c11c" \
             --url "$TARGET_URL" \
-            --prompt "I added a new feature. PR Title: $PR_TITLE. PR Description: $PR_BODY. Find any new pages or buttons mentioned and generate tests for these journeys."
+            --prompt "I added a new feature. PR Title: $PR_TITLE. PR Description: $PR_BODY. Please find any new pages, buttons, or features mentioned and generate tests for these journeys."
