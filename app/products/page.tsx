@@ -63,24 +63,14 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
-  DollarSign,
-  TrendingUp,
-  TrendingDown,
   Activity,
-  Filter,
-  XCircle,
   Copy,
   Star,
-  StarOff,
   Grid3x3,
   List,
   FileText,
   Undo2,
-  Calendar,
-  Tag,
   Zap,
-  TrendingDown as TrendingDownIcon,
-  Layers,
   GitCompare,
   Settings,
   Bell,
@@ -316,7 +306,7 @@ export default function ProductsPage() {
 
   // Filter and sort products
   const filteredAndSortedProducts = useMemo(() => {
-    let filtered = products.filter((product) => {
+    const filtered = products.filter((product) => {
       const matchesSearch =
         product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -511,7 +501,7 @@ export default function ProductsPage() {
         .split(',')
         .map((t) => t.trim())
         .filter(Boolean);
-      const updatedProduct = {
+      const updatedProduct: Product = {
         ...selectedProduct,
         name: formData.name,
         description: formData.description,
@@ -565,10 +555,15 @@ export default function ProductsPage() {
     saveToHistory();
     setTimeout(() => {
       const newStock = parseInt(quickStockValue);
-      const updatedProduct = {
+      const newStatus: ProductStatus = newStock === 0 
+        ? 'out_of_stock' 
+        : selectedProduct.status === 'out_of_stock' 
+          ? 'active' 
+          : selectedProduct.status;
+      const updatedProduct: Product = {
         ...selectedProduct,
         stock: newStock,
-        status: newStock === 0 ? 'out_of_stock' : selectedProduct.status === 'out_of_stock' ? 'active' : selectedProduct.status,
+        status: newStatus,
         lastModified: new Date().toISOString(),
       };
 
@@ -589,7 +584,7 @@ export default function ProductsPage() {
     setIsLoading(true);
     saveToHistory();
     setTimeout(() => {
-      const updatedProduct = {
+      const updatedProduct: Product = {
         ...selectedProduct,
         notes: productNotes,
         lastModified: new Date().toISOString(),
