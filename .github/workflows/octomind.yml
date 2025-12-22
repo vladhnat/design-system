@@ -11,7 +11,7 @@ jobs:
       contents: read
       pull-requests: read
     steps:
-      # 1. FETCH PR DATA (Remains the same to get title/body)
+      # 1. FETCH PR DATA
       - name: Fetch PR Details
         id: pr_details
         uses: actions/github-script@v7
@@ -26,7 +26,9 @@ jobs:
               const pr = prs.data[0];
               core.setOutput('number', pr.number);
               core.setOutput('title', pr.title);
-              core.setOutput('body', (pr.body || "").replace(/[`"']/g, "").substring(0, 1000));
+              // Sanitize body to remove any remaining backticks or quotes that might break prompts
+              const cleanBody = pr.body ? pr.body.replace(/[`"']/g, "").substring(0, 1000) : "No description";
+              core.setOutput('body', cleanBody);
             } else {
               core.setOutput('number', 'NONE');
             }
@@ -39,12 +41,14 @@ jobs:
           token: ${{ secrets.OCTOMIND_API_KEY }}
           testTargetId: "96ce3c22-add9-4b72-8b31-5d9d0a19c11c"
 
-      # 3. DISCOVER NEW TESTS (Replaces the failing CLI batch-generation)
+      # 3. DISCOVER NEW TESTS (This replaces the failing CLI batch-generation step)
       - name: Discover New Journeys
         if: steps.pr_details.outputs.number != 'NONE'
-        uses: OctoMind-dev/automagically-action-discover@v2
+        # Fixed the repo name: 'discovery' instead of 'discover'
+        uses: OctoMind-dev/automagically-action-discovery@v2
         with:
           url: "${{ github.event.deployment_status.target_url }}?x-vercel-protection-bypass=${{ secrets.VERCEL_BYPASS_SECRET }}&x-vercel-set-bypass-cookie=true"
           token: ${{ secrets.OCTOMIND_API_KEY }}
           testTargetId: "96ce3c22-add9-4b72-8b31-5d9d0a19c11c"
-          prompt: "PR Title: ${{ steps.pr_details.outputs.title }}. PR Description: ${{ steps.pr_details.outputs.body }}."
+          # The action handles this prompt safely without Zod validation errors
+          prompt: "PR Title: ${{ steps.pr_details.outputs.title }}. PR Description: ${{ steps.pr_details.outputs.body }}. Find the new features at /products."
