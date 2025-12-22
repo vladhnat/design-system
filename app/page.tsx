@@ -56,6 +56,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Progress } from '@/components/ui/progress';
+import { Slider } from '@/components/ui/slider';
 import {
   Tooltip,
   TooltipContent,
@@ -83,6 +84,7 @@ import Link from 'next/link';
 export default function Home() {
   const [progress, setProgress] = useState(33);
   const [switchChecked, setSwitchChecked] = useState(false);
+  const [sliderValue, setSliderValue] = useState([50]);
 
   return (
     <TooltipProvider>
@@ -684,6 +686,51 @@ export default function Home() {
                 </CardContent>
               </Card>
             </div>
+          </section>
+
+          {/* Slider Section */}
+          <section className="mb-16">
+            <h2 className="text-3xl font-semibold mb-6">Slider</h2>
+            <Card>
+              <CardHeader>
+                <CardTitle>Range Slider</CardTitle>
+                <CardDescription>
+                  Select a value from a range using a slider
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label>Volume</Label>
+                    <span className="text-sm text-muted-foreground">
+                      {sliderValue[0]}%
+                    </span>
+                  </div>
+                  <Slider
+                    value={sliderValue}
+                    onValueChange={setSliderValue}
+                    max={100}
+                    step={1}
+                  />
+                </div>
+                <Separator />
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label>Brightness</Label>
+                    <span className="text-sm text-muted-foreground">50%</span>
+                  </div>
+                  <Slider defaultValue={[50]} max={100} step={1} />
+                </div>
+                <Separator />
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label>Disabled Slider</Label>
+                    <span className="text-sm text-muted-foreground">25%</span>
+                  </div>
+                  <Slider defaultValue={[25]} max={100} step={1} disabled />
+                </div>
+              </CardContent>
+            </Card>
           </section>
 
           {/* Separator Section */}
