@@ -47,5 +47,9 @@ jobs:
           # Note: Batch Generation also needs the bypass token on the baseUrl to scan the UI
           baseUrl: '${{ github.event.deployment_status.target_url }}?x-vercel-protection-bypass=${{ secrets.VERCEL_BYPASS_SECRET }}&x-vercel-set-bypass-cookie=true'
           token: ${{ secrets.OCTOMIND_API_KEY }}
+          prompt: |
+            Please consider the following changes and generate or update existing tests for them:
+            Title: ${{ github.event.pull_request.title }}
+            Description: ${{ github.event.pull_request.body }}
           testTargetId: 96ce3c22-add9-4b72-8b31-5d9d0a19c11c
           pullRequestNumber: ${{ steps.pr_number.outputs.result }}
