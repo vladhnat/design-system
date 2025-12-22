@@ -42,13 +42,18 @@ jobs:
           testTargetId: 96ce3c22-add9-4b72-8b31-5d9d0a19c11c
           blocking: false
 
-      # 2. BATCH GENERATION (Using CLI for full prompt support)
+      # 2. BATCH GENERATION (Safe Version)
       - name: Octomind Batch Generation
         if: steps.pr_details.outputs.number != 'NONE'
         env:
+          # Mapping outputs to env vars prevents shell injection
+          PR_TITLE: ${{ steps.pr_details.outputs.title }}
+          PR_BODY: ${{ steps.pr_details.outputs.body }}
           OCTOMIND_TOKEN: ${{ secrets.OCTOMIND_API_KEY }}
         run: |
+          # Use the environment variables inside double quotes in the script
           npx @octomind/octomind batch-generation \
+            --token "$OCTOMIND_TOKEN" \
             --test-target-id 96ce3c22-add9-4b72-8b31-5d9d0a19c11c \
             --url "${{ github.event.deployment_status.target_url }}?x-vercel-protection-bypass=${{ secrets.VERCEL_BYPASS_SECRET }}&x-vercel-set-bypass-cookie=true" \
-            --prompt "I added new functionality. PR Title: ${{ steps.pr_details.outputs.title }}. PR Description: ${{ steps.pr_details.outputs.body }}. Please discover the new pages and generate tests for the new user journeys."
+            --prompt "PR Title: $PR_TITLE. PR Description: $PR_BODY. Please discover new pages and generate tests for the new user journeys."
