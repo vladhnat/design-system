@@ -76,7 +76,9 @@ import {
   Edit,
   Trash2,
   HelpCircle,
+  Package,
 } from 'lucide-react';
+import Link from 'next/link';
 
 export default function Home() {
   const [progress, setProgress] = useState(33);
@@ -94,10 +96,16 @@ export default function Home() {
                 Design System
               </h1>
             </div>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-6">
               A comprehensive component library built with shadcn/ui and
               Tailwind CSS
             </p>
+            <Link href="/products">
+              <Button size="lg" className="gap-2">
+                <Package className="h-5 w-5" />
+                View Product Management
+              </Button>
+            </Link>
           </div>
 
           {/* Buttons Section */}
