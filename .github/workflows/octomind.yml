@@ -5,15 +5,15 @@ on:
 
 jobs:
   octomind:
+    # Only run if deployment was successful
     if: github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
     permissions:
       contents: read
       pull-requests: read
     steps:
-      # 1. FETCH PR DATA
-      - name: Fetch PR Details
-        id: pr_details
+      - name: Get PR Number
+        id: pr_number
         uses: actions/github-script@v7
         with:
           script: |
@@ -22,33 +22,30 @@ jobs:
               repo: context.repo.repo,
               commit_sha: context.sha,
             });
-            if (prs.data.length > 0) {
-              const pr = prs.data[0];
-              core.setOutput('number', pr.number);
-              core.setOutput('title', pr.title);
-              // Sanitize body to remove any remaining backticks or quotes that might break prompts
-              const cleanBody = pr.body ? pr.body.replace(/[`"']/g, "").substring(0, 1000) : "No description";
-              core.setOutput('body', cleanBody);
-            } else {
-              core.setOutput('number', 'NONE');
-            }
+            const prNumber = prs.data.length > 0 ? prs.data[0].number : 'NONE';
+            console.log("Found PR Number: " + prNumber);
+            return prNumber;
+          result-encoding: string
 
-      # 2. EXECUTE EXISTING TESTS
-      - name: Run Existing Octomind Tests
+      # 1. RUN EXISTING TESTS
+      - name: Run Octomind Tests
         uses: OctoMind-dev/automagically-action-execute@v2
+        env:
+          # This provides the PR ID to Octomind's engine manually
+          OCTOMIND_PULL_REQUEST_NUMBER: ${{ steps.pr_number.outputs.result }}
         with:
-          url: "${{ github.event.deployment_status.target_url }}?x-vercel-protection-bypass=${{ secrets.VERCEL_BYPASS_SECRET }}&x-vercel-set-bypass-cookie=true"
+          # Includes your Vercel Bypass Secret
+          url: '${{ github.event.deployment_status.target_url }}?x-vercel-protection-bypass=${{ secrets.VERCEL_BYPASS_SECRET }}&x-vercel-set-bypass-cookie=true'
           token: ${{ secrets.OCTOMIND_API_KEY }}
-          testTargetId: "96ce3c22-add9-4b72-8b31-5d9d0a19c11c"
+          testTargetId: 96ce3c22-add9-4b72-8b31-5d9d0a19c11c
+          blocking: false
 
-      # 3. DISCOVER NEW TESTS (This replaces the failing CLI batch-generation step)
-      - name: Discover New Journeys
-        if: steps.pr_details.outputs.number != 'NONE'
-        # Fixed the repo name: 'discovery' instead of 'discover'
-        uses: OctoMind-dev/automagically-action-discovery@v2
+      # 2. BATCH GENERATION
+      - name: Octomind Batch Generation
+        uses: OctoMind-dev/octomind-action-batch-generation@v1
         with:
-          url: "${{ github.event.deployment_status.target_url }}?x-vercel-protection-bypass=${{ secrets.VERCEL_BYPASS_SECRET }}&x-vercel-set-bypass-cookie=true"
+          # Note: Batch Generation also needs the bypass token on the baseUrl to scan the UI
+          baseUrl: '${{ github.event.deployment_status.target_url }}?x-vercel-protection-bypass=${{ secrets.VERCEL_BYPASS_SECRET }}&x-vercel-set-bypass-cookie=true'
           token: ${{ secrets.OCTOMIND_API_KEY }}
-          testTargetId: "96ce3c22-add9-4b72-8b31-5d9d0a19c11c"
-          # The action handles this prompt safely without Zod validation errors
-          prompt: "PR Title: ${{ steps.pr_details.outputs.title }}. PR Description: ${{ steps.pr_details.outputs.body }}. Find the new features at /products."
+          testTargetId: 96ce3c22-add9-4b72-8b31-5d9d0a19c11c
+          pullRequestNumber: ${{ steps.pr_number.outputs.result }}
