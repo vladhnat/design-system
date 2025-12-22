@@ -42,6 +42,9 @@ import { Separator } from '@/components/ui/separator';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
+import { Slider } from '@/components/ui/slider';
+import { Switch } from '@/components/ui/switch';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import {
   Plus,
   Search,
@@ -60,12 +63,17 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
-  DollarSign,
-  TrendingUp,
-  TrendingDown,
   Activity,
-  Filter,
-  XCircle,
+  Copy,
+  Star,
+  Grid3x3,
+  List,
+  FileText,
+  Undo2,
+  Zap,
+  GitCompare,
+  Settings,
+  Bell,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -83,14 +91,23 @@ interface Product {
   stock: number;
   createdAt: string;
   tags?: string[];
+  notes?: string;
+  favorite?: boolean;
+  stockThreshold?: number;
+  lastModified?: string;
 }
 
 interface ActivityLog {
   id: string;
-  action: 'created' | 'updated' | 'deleted' | 'bulk_updated' | 'bulk_deleted';
+  action: 'created' | 'updated' | 'deleted' | 'bulk_updated' | 'bulk_deleted' | 'duplicated' | 'stock_updated' | 'favorited' | 'unfavorited';
   productName: string;
   timestamp: string;
   details?: string;
+}
+
+interface HistoryState {
+  products: Product[];
+  timestamp: string;
 }
 
 // Mock initial data with more products
@@ -231,22 +248,38 @@ const ITEMS_PER_PAGE = 5;
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>(initialProducts);
+  const [history, setHistory] = useState<HistoryState[]>([]);
   const [activityLog, setActivityLog] = useState<ActivityLog[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [tagFilter, setTagFilter] = useState<string>('all');
   const [priceMin, setPriceMin] = useState('');
   const [priceMax, setPriceMax] = useState('');
+  const [dateFrom, setDateFrom] = useState('');
+  const [dateTo, setDateTo] = useState('');
   const [sortBy, setSortBy] = useState<'name' | 'price' | 'stock' | 'createdAt'>('name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedProducts, setSelectedProducts] = useState<Set<string>>(new Set());
+  const [favoriteProducts, setFavoriteProducts] = useState<Set<string>>(new Set());
+  const [comparisonProducts, setComparisonProducts] = useState<Set<string>>(new Set());
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
+  const [showLowStockOnly, setShowLowStockOnly] = useState(false);
+  const [stockThreshold, setStockThreshold] = useState(20);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isBulkDeleteDialogOpen, setIsBulkDeleteDialogOpen] = useState(false);
   const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false);
+  const [isDuplicateDialogOpen, setIsDuplicateDialogOpen] = useState(false);
+  const [isQuickStockDialogOpen, setIsQuickStockDialogOpen] = useState(false);
+  const [isNotesDialogOpen, setIsNotesDialogOpen] = useState(false);
+  const [isComparisonDialogOpen, setIsComparisonDialogOpen] = useState(false);
+  const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [quickStockValue, setQuickStockValue] = useState('');
+  const [productNotes, setProductNotes] = useState('');
   const [alert, setAlert] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('products');
@@ -264,18 +297,29 @@ export default function ProductsPage() {
 
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
+  // Get all unique tags
+  const allTags = useMemo(() => {
+    const tags = new Set<string>();
+    products.forEach((p) => p.tags?.forEach((tag) => tags.add(tag)));
+    return Array.from(tags).sort();
+  }, [products]);
+
   // Filter and sort products
   const filteredAndSortedProducts = useMemo(() => {
-    let filtered = products.filter((product) => {
+    const filtered = products.filter((product) => {
       const matchesSearch =
         product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.tags?.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()));
       const matchesCategory = categoryFilter === 'all' || product.category === categoryFilter;
       const matchesStatus = statusFilter === 'all' || product.status === statusFilter;
+      const matchesTag = tagFilter === 'all' || product.tags?.includes(tagFilter);
       const matchesPriceMin = !priceMin || product.price >= parseFloat(priceMin);
       const matchesPriceMax = !priceMax || product.price <= parseFloat(priceMax);
-      return matchesSearch && matchesCategory && matchesStatus && matchesPriceMin && matchesPriceMax;
+      const matchesDateFrom = !dateFrom || product.createdAt >= dateFrom;
+      const matchesDateTo = !dateTo || product.createdAt <= dateTo;
+      const matchesLowStock = !showLowStockOnly || (product.stock < stockThreshold && product.stock > 0);
+      return matchesSearch && matchesCategory && matchesStatus && matchesTag && matchesPriceMin && matchesPriceMax && matchesDateFrom && matchesDateTo && matchesLowStock;
     });
 
     // Sort
@@ -310,7 +354,7 @@ export default function ProductsPage() {
     });
 
     return filtered;
-  }, [products, searchQuery, categoryFilter, statusFilter, priceMin, priceMax, sortBy, sortOrder]);
+  }, [products, searchQuery, categoryFilter, statusFilter, tagFilter, priceMin, priceMax, dateFrom, dateTo, showLowStockOnly, stockThreshold, sortBy, sortOrder]);
 
   // Pagination
   const totalPages = Math.ceil(filteredAndSortedProducts.length / ITEMS_PER_PAGE);
@@ -346,6 +390,21 @@ export default function ProductsPage() {
       categoryCounts,
     };
   }, [products]);
+
+  const saveToHistory = () => {
+    setHistory((prev) => [...prev, { products: [...products], timestamp: new Date().toISOString() }].slice(-10)); // Keep last 10 states
+  };
+
+  const undo = () => {
+    if (history.length > 0) {
+      const previousState = history[history.length - 1];
+      setHistory((prev) => prev.slice(0, -1));
+      setProducts(previousState.products);
+      addActivityLog('updated', 'Multiple products', 'Undo operation');
+      setAlert({ type: 'success', message: 'Changes undone successfully!' });
+      setTimeout(() => setAlert(null), 3000);
+    }
+  };
 
   const addActivityLog = (action: ActivityLog['action'], productName: string, details?: string) => {
     const log: ActivityLog = {
@@ -402,6 +461,7 @@ export default function ProductsPage() {
     if (!validateForm()) return;
 
     setIsLoading(true);
+    saveToHistory();
     setTimeout(() => {
       const tags = formData.tags
         .split(',')
@@ -417,6 +477,8 @@ export default function ProductsPage() {
         stock: parseInt(formData.stock),
         createdAt: new Date().toISOString().split('T')[0],
         tags,
+        stockThreshold: stockThreshold,
+        lastModified: new Date().toISOString(),
       };
 
       setProducts([...products, newProduct]);
@@ -433,12 +495,13 @@ export default function ProductsPage() {
     if (!validateForm() || !selectedProduct) return;
 
     setIsLoading(true);
+    saveToHistory();
     setTimeout(() => {
       const tags = formData.tags
         .split(',')
         .map((t) => t.trim())
         .filter(Boolean);
-      const updatedProduct = {
+      const updatedProduct: Product = {
         ...selectedProduct,
         name: formData.name,
         description: formData.description,
@@ -447,6 +510,7 @@ export default function ProductsPage() {
         status: formData.status,
         stock: parseInt(formData.stock),
         tags,
+        lastModified: new Date().toISOString(),
       };
 
       setProducts(products.map((p) => (p.id === selectedProduct.id ? updatedProduct : p)));
@@ -460,10 +524,104 @@ export default function ProductsPage() {
     }, 500);
   };
 
+  const handleDuplicate = () => {
+    if (!selectedProduct) return;
+
+    setIsLoading(true);
+    saveToHistory();
+    setTimeout(() => {
+      const duplicatedProduct: Product = {
+        ...selectedProduct,
+        id: Date.now().toString(),
+        name: `${selectedProduct.name} (Copy)`,
+        createdAt: new Date().toISOString().split('T')[0],
+        lastModified: new Date().toISOString(),
+      };
+
+      setProducts([...products, duplicatedProduct]);
+      setIsLoading(false);
+      setIsDuplicateDialogOpen(false);
+      setSelectedProduct(null);
+      addActivityLog('duplicated', duplicatedProduct.name, `Duplicated from "${selectedProduct.name}"`);
+      setAlert({ type: 'success', message: 'Product duplicated successfully!' });
+      setTimeout(() => setAlert(null), 3000);
+    }, 500);
+  };
+
+  const handleQuickStockUpdate = () => {
+    if (!selectedProduct || !quickStockValue) return;
+
+    setIsLoading(true);
+    saveToHistory();
+    setTimeout(() => {
+      const newStock = parseInt(quickStockValue);
+      const newStatus: ProductStatus = newStock === 0 
+        ? 'out_of_stock' 
+        : selectedProduct.status === 'out_of_stock' 
+          ? 'active' 
+          : selectedProduct.status;
+      const updatedProduct: Product = {
+        ...selectedProduct,
+        stock: newStock,
+        status: newStatus,
+        lastModified: new Date().toISOString(),
+      };
+
+      setProducts(products.map((p) => (p.id === selectedProduct.id ? updatedProduct : p)));
+      setIsLoading(false);
+      setIsQuickStockDialogOpen(false);
+      setSelectedProduct(null);
+      setQuickStockValue('');
+      addActivityLog('stock_updated', updatedProduct.name, `Stock updated to ${newStock}`);
+      setAlert({ type: 'success', message: 'Stock updated successfully!' });
+      setTimeout(() => setAlert(null), 3000);
+    }, 500);
+  };
+
+  const handleSaveNotes = () => {
+    if (!selectedProduct) return;
+
+    setIsLoading(true);
+    saveToHistory();
+    setTimeout(() => {
+      const updatedProduct: Product = {
+        ...selectedProduct,
+        notes: productNotes,
+        lastModified: new Date().toISOString(),
+      };
+
+      setProducts(products.map((p) => (p.id === selectedProduct.id ? updatedProduct : p)));
+      setIsLoading(false);
+      setIsNotesDialogOpen(false);
+      setSelectedProduct(null);
+      setProductNotes('');
+      addActivityLog('updated', updatedProduct.name, 'Notes updated');
+      setAlert({ type: 'success', message: 'Notes saved successfully!' });
+      setTimeout(() => setAlert(null), 3000);
+    }, 500);
+  };
+
+  const toggleFavorite = (productId: string) => {
+    const product = products.find((p) => p.id === productId);
+    if (!product) return;
+
+    saveToHistory();
+    const newFavorites = new Set(favoriteProducts);
+    if (newFavorites.has(productId)) {
+      newFavorites.delete(productId);
+      addActivityLog('unfavorited', product.name);
+    } else {
+      newFavorites.add(productId);
+      addActivityLog('favorited', product.name);
+    }
+    setFavoriteProducts(newFavorites);
+  };
+
   const handleDelete = () => {
     if (!selectedProduct) return;
 
     setIsLoading(true);
+    saveToHistory();
     setTimeout(() => {
       const productName = selectedProduct.name;
       setProducts(products.filter((p) => p.id !== selectedProduct.id));
@@ -480,6 +638,7 @@ export default function ProductsPage() {
     if (selectedProducts.size === 0) return;
 
     setIsLoading(true);
+    saveToHistory();
     setTimeout(() => {
       const deletedNames = products
         .filter((p) => selectedProducts.has(p.id))
@@ -498,12 +657,13 @@ export default function ProductsPage() {
     if (selectedProducts.size === 0) return;
 
     setIsLoading(true);
+    saveToHistory();
     setTimeout(() => {
       const updatedNames = products
         .filter((p) => selectedProducts.has(p.id))
         .map((p) => p.name);
       setProducts(
-        products.map((p) => (selectedProducts.has(p.id) ? { ...p, status } : p))
+        products.map((p) => (selectedProducts.has(p.id) ? { ...p, status, lastModified: new Date().toISOString() } : p))
       );
       setIsLoading(false);
       addActivityLog('bulk_updated', `${selectedProducts.size} products`, `Status changed to ${statusLabels[status]}`);
@@ -543,6 +703,23 @@ export default function ProductsPage() {
       tags: product.tags?.join(', ') || '',
     });
     setIsEditDialogOpen(true);
+  };
+
+  const openDuplicateDialog = (product: Product) => {
+    setSelectedProduct(product);
+    setIsDuplicateDialogOpen(true);
+  };
+
+  const openQuickStockDialog = (product: Product) => {
+    setSelectedProduct(product);
+    setQuickStockValue(product.stock.toString());
+    setIsQuickStockDialogOpen(true);
+  };
+
+  const openNotesDialog = (product: Product) => {
+    setSelectedProduct(product);
+    setProductNotes(product.notes || '');
+    setIsNotesDialogOpen(true);
   };
 
   const openDeleteDialog = (product: Product) => {
@@ -598,9 +775,28 @@ export default function ProductsPage() {
     setSearchQuery('');
     setCategoryFilter('all');
     setStatusFilter('all');
+    setTagFilter('all');
     setPriceMin('');
     setPriceMax('');
+    setDateFrom('');
+    setDateTo('');
+    setShowLowStockOnly(false);
     setCurrentPage(1);
+  };
+
+  const toggleComparison = (productId: string) => {
+    const newComparison = new Set(comparisonProducts);
+    if (newComparison.has(productId)) {
+      newComparison.delete(productId);
+    } else {
+      if (newComparison.size >= 3) {
+        setAlert({ type: 'error', message: 'You can compare up to 3 products at once' });
+        setTimeout(() => setAlert(null), 3000);
+        return;
+      }
+      newComparison.add(productId);
+    }
+    setComparisonProducts(newComparison);
   };
 
   return (
@@ -686,12 +882,37 @@ export default function ProductsPage() {
                     <CardTitle>Filters & Search</CardTitle>
                     <CardDescription>Search and filter products</CardDescription>
                   </div>
-                  {(searchQuery || categoryFilter !== 'all' || statusFilter !== 'all' || priceMin || priceMax) && (
-                    <Button variant="ghost" size="sm" onClick={clearFilters}>
-                      <X className="h-4 w-4 mr-2" />
-                      Clear Filters
+                  <div className="flex items-center gap-2">
+                    {history.length > 0 && (
+                      <Button variant="outline" size="sm" onClick={undo} title="Undo last action (Ctrl+Z)">
+                        <Undo2 className="h-4 w-4 mr-2" />
+                        Undo
+                      </Button>
+                    )}
+                    {comparisonProducts.size > 0 && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setIsComparisonDialogOpen(true)}
+                      >
+                        <GitCompare className="h-4 w-4 mr-2" />
+                        Compare ({comparisonProducts.size})
+                      </Button>
+                    )}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setIsSettingsDialogOpen(true)}
+                    >
+                      <Settings className="h-4 w-4" />
                     </Button>
-                  )}
+                    {(searchQuery || categoryFilter !== 'all' || statusFilter !== 'all' || tagFilter !== 'all' || priceMin || priceMax || dateFrom || dateTo || showLowStockOnly) && (
+                      <Button variant="ghost" size="sm" onClick={clearFilters}>
+                        <X className="h-4 w-4 mr-2" />
+                        Clear Filters
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </CardHeader>
               <CardContent>
@@ -734,14 +955,106 @@ export default function ProductsPage() {
                       ))}
                     </SelectContent>
                   </Select>
-                  <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-                    <DialogTrigger asChild>
-                      <Button className="w-full" onClick={resetForm}>
-                        <Plus className="h-4 w-4 mr-2" />
-                        Add Product
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                  <Select value={tagFilter} onValueChange={setTagFilter}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="All Tags" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Tags</SelectItem>
+                      {allTags.map((tag) => (
+                        <SelectItem key={tag} value={tag}>
+                          {tag}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                  <div className="grid gap-2">
+                    <Label>Price Range ($)</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        type="number"
+                        step="0.01"
+                        placeholder="Min"
+                        value={priceMin}
+                        onChange={(e) => {
+                          setPriceMin(e.target.value);
+                          setCurrentPage(1);
+                        }}
+                      />
+                      <Input
+                        type="number"
+                        step="0.01"
+                        placeholder="Max"
+                        value={priceMax}
+                        onChange={(e) => {
+                          setPriceMax(e.target.value);
+                          setCurrentPage(1);
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div className="grid gap-2">
+                    <Label>Date Range</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        type="date"
+                        placeholder="From"
+                        value={dateFrom}
+                        onChange={(e) => {
+                          setDateFrom(e.target.value);
+                          setCurrentPage(1);
+                        }}
+                      />
+                      <Input
+                        type="date"
+                        placeholder="To"
+                        value={dateTo}
+                        onChange={(e) => {
+                          setDateTo(e.target.value);
+                          setCurrentPage(1);
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center space-x-2">
+                      <Switch
+                        id="low-stock"
+                        checked={showLowStockOnly}
+                        onCheckedChange={setShowLowStockOnly}
+                      />
+                      <Label htmlFor="low-stock" className="cursor-pointer">
+                        Low Stock Only
+                      </Label>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant={viewMode === 'list' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setViewMode('list')}
+                    >
+                      <List className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant={viewMode === 'grid' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setViewMode('grid')}
+                    >
+                      <Grid3x3 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+                <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button onClick={resetForm} className="w-full">
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Product
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
                       <DialogHeader>
                         <DialogTitle>Create New Product</DialogTitle>
                         <DialogDescription>
@@ -893,41 +1206,13 @@ export default function ProductsPage() {
                           Create Product
                         </Button>
                       </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="grid gap-2">
-                    <Label>Price Range ($)</Label>
-                    <div className="flex gap-2">
-                      <Input
-                        type="number"
-                        step="0.01"
-                        placeholder="Min"
-                        value={priceMin}
-                        onChange={(e) => {
-                          setPriceMin(e.target.value);
-                          setCurrentPage(1);
-                        }}
-                      />
-                      <Input
-                        type="number"
-                        step="0.01"
-                        placeholder="Max"
-                        value={priceMax}
-                        onChange={(e) => {
-                          setPriceMax(e.target.value);
-                          setCurrentPage(1);
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <div className="flex items-end gap-2">
-                    <Button variant="outline" onClick={exportToCSV} className="flex-1">
-                      <Download className="h-4 w-4 mr-2" />
-                      Export CSV
-                    </Button>
-                  </div>
+                  </DialogContent>
+                </Dialog>
+                <div className="flex items-end gap-2">
+                  <Button variant="outline" onClick={exportToCSV} className="flex-1">
+                    <Download className="h-4 w-4 mr-2" />
+                    Export CSV
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -1055,6 +1340,18 @@ export default function ProductsPage() {
                               <div className="flex-1">
                                 <div className="flex items-center gap-3 mb-2">
                                   <h3 className="text-xl font-semibold">{product.name}</h3>
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-6 w-6"
+                                    onClick={() => toggleFavorite(product.id)}
+                                  >
+                                    {favoriteProducts.has(product.id) ? (
+                                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                                    ) : (
+                                      <Star className="h-4 w-4" />
+                                    )}
+                                  </Button>
                                   <Badge
                                     className={`${statusColors[product.status]} text-white`}
                                   >
@@ -1063,6 +1360,12 @@ export default function ProductsPage() {
                                   <Badge variant="outline">
                                     {categoryLabels[product.category]}
                                   </Badge>
+                                  {product.stock < (product.stockThreshold || stockThreshold) && product.stock > 0 && (
+                                    <Badge variant="destructive" className="gap-1">
+                                      <Bell className="h-3 w-3" />
+                                      Low Stock
+                                    </Badge>
+                                  )}
                                 </div>
                                 <p className="text-muted-foreground mb-4">
                                   {product.description}
@@ -1089,34 +1392,64 @@ export default function ProductsPage() {
                                     <span className="text-muted-foreground">Created: </span>
                                     <span className="font-semibold">{product.createdAt}</span>
                                   </div>
+                                  {product.notes && (
+                                    <div className="flex items-center gap-1">
+                                      <FileText className="h-3 w-3 text-muted-foreground" />
+                                      <span className="text-muted-foreground">Has notes</span>
+                                    </div>
+                                  )}
                                 </div>
                               </div>
-                              <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                  <Button variant="ghost" size="icon">
-                                    <MoreVertical className="h-4 w-4" />
-                                  </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                  <DropdownMenuSeparator />
-                                  <DropdownMenuItem onClick={() => openDetailsDialog(product)}>
-                                    <Eye className="mr-2 h-4 w-4" />
-                                    View Details
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem onClick={() => openEditDialog(product)}>
-                                    <Edit className="mr-2 h-4 w-4" />
-                                    Edit
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem
-                                    onClick={() => openDeleteDialog(product)}
-                                    className="text-destructive"
-                                  >
-                                    <Trash2 className="mr-2 h-4 w-4" />
-                                    Delete
-                                  </DropdownMenuItem>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
+                              <div className="flex items-center gap-2">
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => toggleComparison(product.id)}
+                                  className={comparisonProducts.has(product.id) ? 'bg-primary text-primary-foreground' : ''}
+                                  title="Add to comparison"
+                                >
+                                  <GitCompare className="h-4 w-4" />
+                                </Button>
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" size="icon">
+                                      <MoreVertical className="h-4 w-4" />
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="end">
+                                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem onClick={() => openDetailsDialog(product)}>
+                                      <Eye className="mr-2 h-4 w-4" />
+                                      View Details
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => openEditDialog(product)}>
+                                      <Edit className="mr-2 h-4 w-4" />
+                                      Edit
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => openQuickStockDialog(product)}>
+                                      <Zap className="mr-2 h-4 w-4" />
+                                      Quick Stock Update
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => openNotesDialog(product)}>
+                                      <FileText className="mr-2 h-4 w-4" />
+                                      Notes
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => openDuplicateDialog(product)}>
+                                      <Copy className="mr-2 h-4 w-4" />
+                                      Duplicate
+                                    </DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem
+                                      onClick={() => openDeleteDialog(product)}
+                                      className="text-destructive"
+                                    >
+                                      <Trash2 className="mr-2 h-4 w-4" />
+                                      Delete
+                                    </DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              </div>
                             </div>
                           </CardContent>
                         </Card>
@@ -1304,7 +1637,7 @@ export default function ProductsPage() {
                           {log.action === 'created' && (
                             <CheckCircle2 className="h-5 w-5 text-green-500" />
                           )}
-                          {log.action === 'updated' && (
+                          {(log.action === 'updated' || log.action === 'stock_updated') && (
                             <Edit className="h-5 w-5 text-blue-500" />
                           )}
                           {(log.action === 'deleted' || log.action === 'bulk_deleted') && (
@@ -1313,14 +1646,24 @@ export default function ProductsPage() {
                           {log.action === 'bulk_updated' && (
                             <Activity className="h-5 w-5 text-purple-500" />
                           )}
+                          {log.action === 'duplicated' && (
+                            <Copy className="h-5 w-5 text-orange-500" />
+                          )}
+                          {(log.action === 'favorited' || log.action === 'unfavorited') && (
+                            <Star className="h-5 w-5 text-yellow-500" />
+                          )}
                         </div>
                         <div className="flex-1">
                           <div className="font-semibold">
                             {log.action === 'created' && `Created product "${log.productName}"`}
                             {log.action === 'updated' && `Updated product "${log.productName}"`}
+                            {log.action === 'stock_updated' && `Updated stock for "${log.productName}"`}
                             {log.action === 'deleted' && `Deleted product "${log.productName}"`}
                             {log.action === 'bulk_deleted' && `Bulk deleted ${log.productName}`}
                             {log.action === 'bulk_updated' && `Bulk updated ${log.productName}`}
+                            {log.action === 'duplicated' && `Duplicated product "${log.productName}"`}
+                            {log.action === 'favorited' && `Favorited "${log.productName}"`}
+                            {log.action === 'unfavorited' && `Unfavorited "${log.productName}"`}
                           </div>
                           {log.details && (
                             <div className="text-sm text-muted-foreground mt-1">{log.details}</div>
@@ -1600,6 +1943,26 @@ export default function ProductsPage() {
                     </div>
                   </>
                 )}
+                {selectedProduct.notes && (
+                  <>
+                    <Separator />
+                    <div>
+                      <Label className="text-sm font-semibold">Notes</Label>
+                      <p className="text-sm text-muted-foreground mt-1 whitespace-pre-wrap">{selectedProduct.notes}</p>
+                    </div>
+                  </>
+                )}
+                {selectedProduct.lastModified && (
+                  <>
+                    <Separator />
+                    <div>
+                      <Label className="text-sm font-semibold">Last Modified</Label>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {new Date(selectedProduct.lastModified).toLocaleString()}
+                      </p>
+                    </div>
+                  </>
+                )}
               </div>
             )}
             <DialogFooter>
@@ -1612,6 +1975,250 @@ export default function ProductsPage() {
               }}>
                 <Edit className="h-4 w-4 mr-2" />
                 Edit Product
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Duplicate Dialog */}
+        <Dialog open={isDuplicateDialogOpen} onOpenChange={setIsDuplicateDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Duplicate Product</DialogTitle>
+              <DialogDescription>
+                Create a copy of &quot;{selectedProduct?.name}&quot;? The new product will have &quot;(Copy)&quot; appended to its name.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setIsDuplicateDialogOpen(false);
+                  setSelectedProduct(null);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button onClick={handleDuplicate} disabled={isLoading}>
+                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Duplicate
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Quick Stock Update Dialog */}
+        <Dialog open={isQuickStockDialogOpen} onOpenChange={setIsQuickStockDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Quick Stock Update</DialogTitle>
+              <DialogDescription>
+                Update stock quantity for &quot;{selectedProduct?.name}&quot;
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label htmlFor="quick-stock">Stock Quantity</Label>
+                <Input
+                  id="quick-stock"
+                  type="number"
+                  value={quickStockValue}
+                  onChange={(e) => setQuickStockValue(e.target.value)}
+                  placeholder="Enter stock quantity"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Current stock: {selectedProduct?.stock} units
+                </p>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setIsQuickStockDialogOpen(false);
+                  setSelectedProduct(null);
+                  setQuickStockValue('');
+                }}
+              >
+                Cancel
+              </Button>
+              <Button onClick={handleQuickStockUpdate} disabled={isLoading}>
+                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Update Stock
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Notes Dialog */}
+        <Dialog open={isNotesDialogOpen} onOpenChange={setIsNotesDialogOpen}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Product Notes</DialogTitle>
+              <DialogDescription>
+                Add or edit notes for &quot;{selectedProduct?.name}&quot;
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label htmlFor="product-notes">Notes</Label>
+                <Textarea
+                  id="product-notes"
+                  value={productNotes}
+                  onChange={(e) => setProductNotes(e.target.value)}
+                  placeholder="Add your notes here..."
+                  rows={8}
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setIsNotesDialogOpen(false);
+                  setSelectedProduct(null);
+                  setProductNotes('');
+                }}
+              >
+                Cancel
+              </Button>
+              <Button onClick={handleSaveNotes} disabled={isLoading}>
+                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Save Notes
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Comparison Dialog */}
+        <Dialog open={isComparisonDialogOpen} onOpenChange={setIsComparisonDialogOpen}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Product Comparison</DialogTitle>
+              <DialogDescription>
+                Compare up to 3 products side by side
+              </DialogDescription>
+            </DialogHeader>
+            {comparisonProducts.size > 0 && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 py-4">
+                {Array.from(comparisonProducts).map((productId) => {
+                  const product = products.find((p) => p.id === productId);
+                  if (!product) return null;
+                  return (
+                    <Card key={productId}>
+                      <CardHeader>
+                        <div className="flex items-center justify-between">
+                          <CardTitle className="text-lg">{product.name}</CardTitle>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => toggleComparison(productId)}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="space-y-3">
+                        <div>
+                          <Label className="text-xs text-muted-foreground">Price</Label>
+                          <p className="font-semibold">${product.price.toFixed(2)}</p>
+                        </div>
+                        <div>
+                          <Label className="text-xs text-muted-foreground">Stock</Label>
+                          <p className="font-semibold">{product.stock} units</p>
+                        </div>
+                        <div>
+                          <Label className="text-xs text-muted-foreground">Category</Label>
+                          <Badge variant="outline">{categoryLabels[product.category]}</Badge>
+                        </div>
+                        <div>
+                          <Label className="text-xs text-muted-foreground">Status</Label>
+                          <Badge className={`${statusColors[product.status]} text-white`}>
+                            {statusLabels[product.status]}
+                          </Badge>
+                        </div>
+                        <div>
+                          <Label className="text-xs text-muted-foreground">Description</Label>
+                          <p className="text-sm">{product.description}</p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            )}
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setIsComparisonDialogOpen(false);
+                  setComparisonProducts(new Set());
+                }}
+              >
+                Close
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Settings Dialog */}
+        <Dialog open={isSettingsDialogOpen} onOpenChange={setIsSettingsDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Settings</DialogTitle>
+              <DialogDescription>
+                Configure application settings
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="space-y-2">
+                <Label>Low Stock Threshold</Label>
+                <div className="space-y-2">
+                  <Slider
+                    value={[stockThreshold]}
+                    onValueChange={(value) => setStockThreshold(value[0])}
+                    min={0}
+                    max={100}
+                    step={1}
+                  />
+                  <div className="flex justify-between text-sm text-muted-foreground">
+                    <span>0</span>
+                    <span className="font-semibold">{stockThreshold} units</span>
+                    <span>100</span>
+                  </div>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Products with stock below this threshold will show a low stock alert
+                </p>
+              </div>
+              <Separator />
+              <div className="space-y-2">
+                <Label>Items Per Page</Label>
+                <RadioGroup
+                  value={ITEMS_PER_PAGE.toString()}
+                  onValueChange={(value) => {
+                    // This would require state management for items per page
+                    // For now, we'll keep it static
+                  }}
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="5" id="page-5" />
+                    <Label htmlFor="page-5" className="cursor-pointer">5 items</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="10" id="page-10" />
+                    <Label htmlFor="page-10" className="cursor-pointer">10 items</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="20" id="page-20" />
+                    <Label htmlFor="page-20" className="cursor-pointer">20 items</Label>
+                  </div>
+                </RadioGroup>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsSettingsDialogOpen(false)}>
+                Close
               </Button>
             </DialogFooter>
           </DialogContent>

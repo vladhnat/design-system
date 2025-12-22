@@ -12,8 +12,8 @@ jobs:
       contents: read
       pull-requests: read
     steps:
-      - name: Get PR Number
-        id: pr_number
+      - name: Get PR Information
+        id: pr_info
         uses: actions/github-script@v7
         with:
           script: |
@@ -22,17 +22,36 @@ jobs:
               repo: context.repo.repo,
               commit_sha: context.sha,
             });
-            const prNumber = prs.data.length > 0 ? prs.data[0].number : 'NONE';
-            console.log("Found PR Number: " + prNumber);
-            return prNumber;
-          result-encoding: string
+            
+            if (prs.data.length > 0) {
+              const pr = prs.data[0];
+              const prNumber = pr.number;
+              const prTitle = pr.title || '';
+              const prBody = pr.body || '';
+              
+              console.log("Found PR Number: " + prNumber);
+              console.log("PR Title: " + prTitle);
+              console.log("PR Description length: " + prBody.length + " characters");
+              
+              core.setOutput('number', prNumber.toString());
+              core.setOutput('title', prTitle);
+              core.setOutput('body', prBody);
+            } else {
+              console.log("No PR found for this commit");
+              core.setOutput('number', 'NONE');
+              core.setOutput('title', '');
+              core.setOutput('body', '');
+            }
 
       # 1. RUN EXISTING TESTS
       - name: Run Octomind Tests
         uses: OctoMind-dev/automagically-action-execute@v2
         env:
           # This provides the PR ID to Octomind's engine manually
-          OCTOMIND_PULL_REQUEST_NUMBER: ${{ steps.pr_number.outputs.result }}
+          OCTOMIND_PULL_REQUEST_NUMBER: ${{ steps.pr_info.outputs.number }}
+          # Provide PR context for test generation
+          OCTOMIND_PULL_REQUEST_TITLE: ${{ steps.pr_info.outputs.title }}
+          OCTOMIND_PULL_REQUEST_DESCRIPTION: ${{ steps.pr_info.outputs.body }}
         with:
           # Includes your Vercel Bypass Secret
           url: '${{ github.event.deployment_status.target_url }}?x-vercel-protection-bypass=${{ secrets.VERCEL_BYPASS_SECRET }}&x-vercel-set-bypass-cookie=true'
@@ -40,12 +59,74 @@ jobs:
           testTargetId: 96ce3c22-add9-4b72-8b31-5d9d0a19c11c
           blocking: false
 
-      # 2. BATCH GENERATION
+      # 2. CREATE DISCOVERY WITH PR CONTEXT
+      - name: Initialize Octomind CLI
+        run: |
+          # Create .config directory and empty config file if it doesn't exist
+          mkdir -p ~/.config
+          echo '{}' > ~/.config/octomind.json
+          
+          # Initialize CLI with API key and test target ID
+          npx -y @octomind/octomind init \
+            --api-key "${{ secrets.OCTOMIND_API_KEY }}" \
+            --test-target-id 96ce3c22-add9-4b72-8b31-5d9d0a19c11c \
+            --force
+
+      - name: Create Discovery with PR Context
+        env:
+          PR_TITLE: ${{ steps.pr_info.outputs.title }}
+          PR_BODY: ${{ steps.pr_info.outputs.body }}
+          PR_NUMBER: ${{ steps.pr_info.outputs.number }}
+        run: |
+          # Construct prompt with PR context using heredoc to handle special characters
+          if [ -n "$PR_TITLE" ] || [ -n "$PR_BODY" ]; then
+            PROMPT=$(cat <<EOF
+          PR Title: ${PR_TITLE:-N/A}
+          
+          PR Description:
+          ${PR_BODY:-N/A}
+          
+          Please generate comprehensive end-to-end tests based on the changes described in this pull request.
+          EOF
+          )
+            # Generate discovery name from PR
+            if [ "$PR_NUMBER" != "NONE" ]; then
+              DISCOVERY_NAME="PR #${PR_NUMBER}: ${PR_TITLE:-Test Discovery}"
+            else
+              DISCOVERY_NAME="${PR_TITLE:-Test Discovery}"
+            fi
+          else
+            PROMPT="Generate comprehensive end-to-end tests for this deployment."
+            DISCOVERY_NAME="Deployment Test Discovery"
+          fi
+          
+          # Create discovery with PR context via CLI
+          # Uses config from init step, no --api-key needed
+          if [ "$PR_NUMBER" != "NONE" ]; then
+            npx -y @octomind/octomind create-discovery \
+              --test-target-id 96ce3c22-add9-4b72-8b31-5d9d0a19c11c \
+              --name "$DISCOVERY_NAME" \
+              --prompt "$PROMPT" \
+              --entry-point-url-path "/" \
+              --external-id "pr-${PR_NUMBER}"
+          else
+            npx -y @octomind/octomind create-discovery \
+              --test-target-id 96ce3c22-add9-4b72-8b31-5d9d0a19c11c \
+              --name "$DISCOVERY_NAME" \
+              --prompt "$PROMPT" \
+              --entry-point-url-path "/"
+          fi
+
+      # 3. BATCH GENERATION - Trigger test execution
       - name: Octomind Batch Generation
         uses: OctoMind-dev/octomind-action-batch-generation@v1
+        env:
+          # Pass PR context as environment variables
+          OCTOMIND_PULL_REQUEST_TITLE: ${{ steps.pr_info.outputs.title }}
+          OCTOMIND_PULL_REQUEST_DESCRIPTION: ${{ steps.pr_info.outputs.body }}
         with:
           # Note: Batch Generation also needs the bypass token on the baseUrl to scan the UI
           baseUrl: '${{ github.event.deployment_status.target_url }}?x-vercel-protection-bypass=${{ secrets.VERCEL_BYPASS_SECRET }}&x-vercel-set-bypass-cookie=true'
           token: ${{ secrets.OCTOMIND_API_KEY }}
           testTargetId: 96ce3c22-add9-4b72-8b31-5d9d0a19c11c
-          pullRequestNumber: ${{ steps.pr_number.outputs.result }}
+          pullRequestNumber: ${{ steps.pr_info.outputs.number }}
