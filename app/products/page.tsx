@@ -89,6 +89,7 @@ interface Product {
   category: ProductCategory;
   status: ProductStatus;
   stock: number;
+  supplier: string;
   createdAt: string;
   tags?: string[];
   notes?: string;
@@ -120,6 +121,7 @@ const initialProducts: Product[] = [
     category: 'electronics',
     status: 'active',
     stock: 45,
+    supplier: 'TechCorp Inc.',
     createdAt: '2024-01-15',
     tags: ['wireless', 'audio', 'premium'],
   },
@@ -131,6 +133,7 @@ const initialProducts: Product[] = [
     category: 'clothing',
     status: 'active',
     stock: 120,
+    supplier: 'Fashion Brands Ltd.',
     createdAt: '2024-01-20',
     tags: ['casual', 'cotton'],
   },
@@ -142,6 +145,7 @@ const initialProducts: Product[] = [
     category: 'food',
     status: 'out_of_stock',
     stock: 0,
+    supplier: 'Organic Foods Co.',
     createdAt: '2024-01-10',
     tags: ['organic', 'coffee'],
   },
@@ -153,6 +157,7 @@ const initialProducts: Product[] = [
     category: 'books',
     status: 'active',
     stock: 30,
+    supplier: 'TechBooks Publishing',
     createdAt: '2024-01-25',
     tags: ['programming', 'education'],
   },
@@ -164,6 +169,7 @@ const initialProducts: Product[] = [
     category: 'toys',
     status: 'inactive',
     stock: 15,
+    supplier: 'ToyWorld Distributors',
     createdAt: '2024-01-05',
     tags: ['educational', 'children'],
   },
@@ -175,6 +181,7 @@ const initialProducts: Product[] = [
     category: 'electronics',
     status: 'active',
     stock: 25,
+    supplier: 'TechCorp Inc.',
     createdAt: '2024-01-18',
     tags: ['wearable', 'health'],
   },
@@ -186,6 +193,7 @@ const initialProducts: Product[] = [
     category: 'clothing',
     status: 'active',
     stock: 50,
+    supplier: 'Fashion Brands Ltd.',
     createdAt: '2024-01-22',
     tags: ['denim', 'casual'],
   },
@@ -197,6 +205,7 @@ const initialProducts: Product[] = [
     category: 'food',
     status: 'active',
     stock: 80,
+    supplier: 'Organic Foods Co.',
     createdAt: '2024-01-12',
     tags: ['chocolate', 'premium'],
   },
@@ -208,6 +217,7 @@ const initialProducts: Product[] = [
     category: 'books',
     status: 'active',
     stock: 20,
+    supplier: 'TechBooks Publishing',
     createdAt: '2024-01-28',
     tags: ['react', 'programming'],
   },
@@ -219,6 +229,7 @@ const initialProducts: Product[] = [
     category: 'toys',
     status: 'active',
     stock: 12,
+    supplier: 'ToyWorld Distributors',
     createdAt: '2024-01-14',
     tags: ['remote-control', 'camera'],
   },
@@ -292,6 +303,7 @@ export default function ProductsPage() {
     category: '' as ProductCategory | '',
     status: 'active' as ProductStatus,
     stock: '',
+    supplier: '',
     tags: '',
   });
 
@@ -377,6 +389,11 @@ export default function ProductsPage() {
       acc[p.category] = (acc[p.category] || 0) + 1;
       return acc;
     }, {} as Record<ProductCategory, number>);
+    const supplierCounts = products.reduce((acc, p) => {
+      acc[p.supplier] = (acc[p.supplier] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+    const uniqueSuppliers = Object.keys(supplierCounts).length;
 
     return {
       total,
@@ -388,6 +405,8 @@ export default function ProductsPage() {
       totalStock,
       lowStock,
       categoryCounts,
+      supplierCounts,
+      uniqueSuppliers,
     };
   }, [products]);
 
@@ -440,6 +459,10 @@ export default function ProductsPage() {
       errors.stock = 'Valid stock quantity is required';
     }
 
+    if (!formData.supplier.trim()) {
+      errors.supplier = 'Supplier is required';
+    }
+
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -452,6 +475,7 @@ export default function ProductsPage() {
       category: '' as ProductCategory | '',
       status: 'active',
       stock: '',
+      supplier: '',
       tags: '',
     });
     setFormErrors({});
@@ -475,6 +499,7 @@ export default function ProductsPage() {
         category: formData.category as ProductCategory,
         status: formData.status,
         stock: parseInt(formData.stock),
+        supplier: formData.supplier,
         createdAt: new Date().toISOString().split('T')[0],
         tags,
         stockThreshold: stockThreshold,
@@ -509,6 +534,7 @@ export default function ProductsPage() {
         category: formData.category as ProductCategory,
         status: formData.status,
         stock: parseInt(formData.stock),
+        supplier: formData.supplier,
         tags,
         lastModified: new Date().toISOString(),
       };
@@ -700,6 +726,7 @@ export default function ProductsPage() {
       category: product.category,
       status: product.status,
       stock: product.stock.toString(),
+      supplier: product.supplier,
       tags: product.tags?.join(', ') || '',
     });
     setIsEditDialogOpen(true);
@@ -742,7 +769,7 @@ export default function ProductsPage() {
   };
 
   const exportToCSV = () => {
-    const headers = ['Name', 'Description', 'Price', 'Category', 'Status', 'Stock', 'Created At', 'Tags'];
+    const headers = ['Name', 'Description', 'Price', 'Category', 'Status', 'Stock', 'Supplier', 'Created At', 'Tags'];
     const rows = filteredAndSortedProducts.map((p) => [
       p.name,
       p.description,
@@ -750,6 +777,7 @@ export default function ProductsPage() {
       categoryLabels[p.category],
       statusLabels[p.status],
       p.stock.toString(),
+      p.supplier,
       p.createdAt,
       p.tags?.join('; ') || '',
     ]);
@@ -1180,6 +1208,22 @@ export default function ProductsPage() {
                           </div>
                         </div>
                         <div className="grid gap-2">
+                          <Label htmlFor="create-supplier">
+                            Supplier <span className="text-destructive">*</span>
+                          </Label>
+                          <Input
+                            id="create-supplier"
+                            value={formData.supplier}
+                            onChange={(e) =>
+                              setFormData({ ...formData, supplier: e.target.value })
+                            }
+                            placeholder="Enter supplier name"
+                          />
+                          {formErrors.supplier && (
+                            <p className="text-sm text-destructive">{formErrors.supplier}</p>
+                          )}
+                        </div>
+                        <div className="grid gap-2">
                           <Label htmlFor="create-tags">Tags (comma-separated)</Label>
                           <Input
                             id="create-tags"
@@ -1387,6 +1431,10 @@ export default function ProductsPage() {
                                   <div>
                                     <span className="text-muted-foreground">Stock: </span>
                                     <span className="font-semibold">{product.stock} units</span>
+                                  </div>
+                                  <div>
+                                    <span className="text-muted-foreground">Supplier: </span>
+                                    <span className="font-semibold">{product.supplier}</span>
                                   </div>
                                   <div>
                                     <span className="text-muted-foreground">Created: </span>
@@ -1611,6 +1659,26 @@ export default function ProductsPage() {
                 </CardContent>
               </Card>
             </div>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Supplier Distribution</CardTitle>
+                <CardDescription>Products by supplier ({statistics.uniqueSuppliers} unique suppliers)</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {Object.entries(statistics.supplierCounts)
+                  .sort(([, a], [, b]) => b - a)
+                  .map(([supplier, count]) => (
+                    <div key={supplier}>
+                      <div className="flex justify-between mb-2">
+                        <span className="text-sm">{supplier}</span>
+                        <span className="text-sm font-semibold">{count}</span>
+                      </div>
+                      <Progress value={(count / statistics.total) * 100} />
+                    </div>
+                  ))}
+              </CardContent>
+            </Card>
           </TabsContent>
 
           {/* Activity Tab */}
@@ -1803,6 +1871,22 @@ export default function ProductsPage() {
                 </div>
               </div>
               <div className="grid gap-2">
+                <Label htmlFor="edit-supplier">
+                  Supplier <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="edit-supplier"
+                  value={formData.supplier}
+                  onChange={(e) =>
+                    setFormData({ ...formData, supplier: e.target.value })
+                  }
+                  placeholder="Enter supplier name"
+                />
+                {formErrors.supplier && (
+                  <p className="text-sm text-destructive">{formErrors.supplier}</p>
+                )}
+              </div>
+              <div className="grid gap-2">
                 <Label htmlFor="edit-tags">Tags (comma-separated)</Label>
                 <Input
                   id="edit-tags"
@@ -1922,6 +2006,10 @@ export default function ProductsPage() {
                     <Badge className={`${statusColors[selectedProduct.status]} text-white mt-1`}>
                       {statusLabels[selectedProduct.status]}
                     </Badge>
+                  </div>
+                  <div>
+                    <Label className="text-sm font-semibold">Supplier</Label>
+                    <p className="text-sm text-muted-foreground mt-1">{selectedProduct.supplier}</p>
                   </div>
                   <div>
                     <Label className="text-sm font-semibold">Created</Label>
@@ -2126,6 +2214,10 @@ export default function ProductsPage() {
                         <div>
                           <Label className="text-xs text-muted-foreground">Stock</Label>
                           <p className="font-semibold">{product.stock} units</p>
+                        </div>
+                        <div>
+                          <Label className="text-xs text-muted-foreground">Supplier</Label>
+                          <p className="font-semibold">{product.supplier}</p>
                         </div>
                         <div>
                           <Label className="text-xs text-muted-foreground">Category</Label>
