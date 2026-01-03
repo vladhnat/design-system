@@ -200,7 +200,7 @@ const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
                 return (
                   <CalendarButton
                     key={dayIndex}
-                    number={day}
+                    number={day ?? undefined}
                     state={state}
                     onClick={() => day && inCurrentMonth && handleDateClick(day)}
                     className={cn(

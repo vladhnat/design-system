@@ -21,7 +21,7 @@ const datePickerFieldVariants = cva("flex flex-col gap-2", {
 })
 
 export interface DatePickerFieldProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange">,
     VariantProps<typeof datePickerFieldVariants> {
   label?: string
   description?: string

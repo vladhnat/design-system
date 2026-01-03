@@ -2,7 +2,6 @@
 
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 
 export interface AvatarGroupProps extends React.HTMLAttributes<HTMLDivElement> {
   spacing?: "100" | "200" | "300" | "400"
@@ -31,12 +30,13 @@ const AvatarGroup = React.forwardRef<HTMLDivElement, AvatarGroupProps>(
       >
         {React.Children.map(visibleAvatars, (child, index) => {
           if (React.isValidElement(child)) {
-            return React.cloneElement(child as React.ReactElement<any>, {
+            const childProps = child.props as { className?: string; size?: "sm" | "default" | "large" }
+            return React.cloneElement(child as React.ReactElement<{ className?: string; size?: "sm" | "default" | "large" }>, {
               className: cn(
                 index > 0 && spacingMap[spacing],
-                child.props.className
+                childProps.className
               ),
-              size: child.props.size || size,
+              size: childProps.size || size,
             })
           }
           return child

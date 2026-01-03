@@ -39,12 +39,13 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>(
         {singleLine
           ? React.Children.map(children, (child, index) => {
               if (React.isValidElement(child)) {
-                return React.cloneElement(child as React.ReactElement<any>, {
+                const childProps = child.props as { className?: string }
+                return React.cloneElement(child as React.ReactElement<{ className?: string }>, {
                   className: cn(
                     index === 0 && "rounded-l-lg rounded-r-none border-r-0",
                     index === React.Children.count(children) - 1 &&
                       "rounded-r-lg rounded-l-none",
-                    child.props.className
+                    childProps.className
                   ),
                 })
               }

@@ -16,6 +16,8 @@ export interface SelectFieldProps
   label?: string
   placeholder?: string
   error?: string
+  className?: string
+  id?: string
   children: React.ReactNode
 }
 

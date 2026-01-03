@@ -22,12 +22,12 @@ const navigationVariants = cva("flex", {
 })
 
 export interface NavigationProps
-  extends React.HTMLAttributes<HTMLNavElement>,
+  extends React.HTMLAttributes<HTMLElement>,
     VariantProps<typeof navigationVariants> {
   children: React.ReactNode
 }
 
-const Navigation = React.forwardRef<HTMLNavElement, NavigationProps>(
+const Navigation = React.forwardRef<HTMLElement, NavigationProps>(
   ({ className, direction, gap, children, ...props }, ref) => {
     return (
       <nav

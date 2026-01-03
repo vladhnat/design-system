@@ -119,7 +119,7 @@ const HeroActions = React.forwardRef<HTMLDivElement, HeroActionsProps>(
 HeroActions.displayName = "HeroActions"
 
 // Hero Form - Hero with form
-export interface HeroFormProps extends Omit<HeroProps, "children"> {
+export interface HeroFormProps extends Omit<HeroProps, "children" | "onSubmit"> {
   formFields?: Array<{
     type: "input" | "textarea"
     label: string
@@ -173,7 +173,7 @@ const HeroForm = React.forwardRef<HTMLDivElement, HeroFormProps>(
 HeroForm.displayName = "HeroForm"
 
 // Hero Newsletter - Hero with newsletter form
-export interface HeroNewsletterProps extends Omit<HeroProps, "children"> {
+export interface HeroNewsletterProps extends Omit<HeroProps, "children" | "onSubmit"> {
   emailPlaceholder?: string
   submitLabel?: string
   onSubmit?: (email: string) => void

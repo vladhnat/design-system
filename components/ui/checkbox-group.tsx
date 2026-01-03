@@ -51,7 +51,11 @@ const CheckboxGroup = React.forwardRef<HTMLDivElement, CheckboxGroupProps>(
               label={item.label}
               description={item.description}
               checked={selectedValues.includes(item.value)}
-              onCheckedChange={(checked) => handleChange(item.value, checked)}
+              onCheckedChange={(checked) => {
+                if (typeof checked === "boolean") {
+                  handleChange(item.value, checked)
+                }
+              }}
             />
           ))}
         </Flex>

@@ -5,7 +5,8 @@ import { cn } from "@/lib/utils"
 import { Slider } from "@/components/ui/slider"
 import { Label } from "@/components/ui/label"
 
-export interface SliderFieldProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface SliderFieldProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, "defaultValue"> {
   label?: string
   description?: string
   value?: number[]

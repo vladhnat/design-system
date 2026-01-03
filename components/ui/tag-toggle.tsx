@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 
 export interface TagToggleProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onToggle"> {
   id: string
   iconStart?: React.ReactNode
   iconEnd?: React.ReactNode
