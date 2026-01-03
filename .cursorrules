@@ -1,0 +1,453 @@
+# Cursor Rules for Design System
+
+## Project Overview
+This is a Next.js 16 design system built with:
+- React 19
+- TypeScript
+- Tailwind CSS 4
+- Radix UI primitives
+- shadcn/ui component patterns
+- class-variance-authority for variants
+
+## Design System Principles
+
+### 1. Component Reuse (CRITICAL - CHECK FIRST)
+- **ALWAYS** check for existing components before creating new ones
+- **NEVER** duplicate functionality that already exists
+- **PREFER** composition over new components
+- **SEARCH** `components/ui/` directory first to find reusable components
+- **USE** existing components as building blocks for new features
+
+#### Available Components to Reuse
+
+**Layout & Structure:**
+- `Section` - Section wrapper with padding variants
+- `Flex` / `FlexItem` - Flexible layout system (flexbox/grid)
+- `TextContentHeading` - Heading with subheading
+- `TextContentTitle` - Hero title with subtitle
+- `Header` / `HeaderAuth` - Site headers
+- `Footer` - Site footer
+- `Navigation` / `NavigationPill` - Navigation components
+- `Hero` / `HeroActions` / `HeroForm` / `HeroNewsletter` - Hero sections
+- `Panel` / `PanelImage` / `PanelImageContent` / `PanelImageDouble` - Panel layouts
+
+**Form Components:**
+- `FormBox` - Form container with spacing
+- `Form` - Form with singleLine variant
+- `InputField` - Input with label and error
+- `TextareaField` - Textarea with label and error
+- `SelectField` - Select with label and error
+- `CheckboxField` - Checkbox with label and description
+- `RadioField` - Radio group with label
+- `SwitchField` - Switch with label and description
+- `SliderField` - Slider with label and output
+- `DateInputField` - Date inputs (day/month/year)
+- `DatePickerField` - Date picker with calendar icon
+- `Search` - Search input with icon
+
+**Interactive Components:**
+- `Button` - All button variants (default, destructive, subtle, outline, ghost, link)
+- `ButtonGroup` - Button grouping with alignment
+- `Tag` - Tag component with remove option
+- `TagToggleGroup` / `TagToggle` - Toggleable tags for filters
+- `CheckboxGroup` - Group of checkboxes
+
+**Display Components:**
+- `Card` - Card container with variants
+- `Badge` - Badge component
+- `Alert` - Alert messages
+- `Avatar` / `AvatarBlock` / `AvatarGroup` - Avatar components
+- `Accordion` - Accordion component
+- `Dialog` - Modal dialogs
+- `Tooltip` - Tooltips
+- `Tabs` - Tab navigation
+- `Separator` - Visual separator
+- `Skeleton` - Loading skeletons
+- `Progress` - Progress bars
+- `Slider` - Slider input
+
+**Card Components:**
+- `ReviewCard` - Review display card
+- `ProductInfoCard` - Product information card
+- `PricingCard` - Pricing plan card
+- `StatsCard` - Statistics card
+- `TestimonialCard` - Testimonial card
+
+**Specialized Components:**
+- `Calendar` - Calendar component
+- `AiChatBox` - AI chat input box
+- `AiSidebar` - AI chat sidebar
+- `AiConversation` - AI conversation display
+- `AiChatCodeBlock` - Code block for AI chat
+- `AiChatUserMessage` - User message bubble
+- `AiChatChatResponse` - AI response bubble
+
+#### Reuse Strategy
+
+1. **Before Creating New Component:**
+   - Search `components/ui/` for similar functionality
+   - Check `specs/` directory for component specifications
+   - Look for components that can be composed together
+   - Consider if a variant can be added to existing component
+
+2. **Composition Over New Components:**
+   ```typescript
+   // ✅ GOOD - Compose existing components
+   const MyFeature = () => (
+     <Section padding="1200">
+       <TextContentHeading heading="Title" subheading="Subtitle" />
+       <Flex gap="600">
+         <Card>...</Card>
+         <Card>...</Card>
+       </Flex>
+     </Section>
+   )
+
+   // ❌ BAD - Creating duplicate functionality
+   const MyFeature = () => (
+     <div className="py-12"> {/* Don't duplicate Section */}
+       <h2>Title</h2> {/* Don't duplicate TextContentHeading */}
+       ...
+     </div>
+   )
+   ```
+
+3. **Extend, Don't Duplicate:**
+   - Add variants to existing components when possible
+   - Use composition to combine existing components
+   - Only create new components when truly unique functionality is needed
+
+4. **Component Composition Examples:**
+   - Use `FormBox` + `InputField` for forms (don't create custom form wrapper)
+   - Use `Flex` + `Card` for layouts (don't create custom grid)
+   - Use `ButtonGroup` + `Button` for button groups (don't create custom group)
+   - Use `Section` + `TextContentHeading` for page sections (don't create custom section)
+
+### 2. Spec-Driven Development
+- **ALWAYS** check `specs/` directory before implementing or modifying components
+- Follow specifications exactly as defined in spec files
+- Update spec files when design changes
+- Reference `specs/design-tokens.md` for all design values
+
+### 3. Component Structure
+- Use `class-variance-authority` (cva) for variant management
+- Follow shadcn/ui patterns and conventions
+- Use Radix UI primitives when available
+- Export both component and variants for flexibility
+- Always use `React.forwardRef` for components that accept refs
+- Include `displayName` for all components
+
+### 3. Design Tokens
+- **NEVER** hardcode colors, spacing, or typography values
+- **ALWAYS** use design tokens from `specs/design-tokens.md`
+- Use Tailwind arbitrary values with design token values: `bg-[#2c2c2c]`
+- Font family: Use `font-[Inter]` for Inter font
+- Spacing: Use design token values (Space/100 = 4px, Space/200 = 8px, etc.)
+
+### 4. Typography
+- Body Base: `text-base font-normal leading-[1.4] font-[Inter]`
+- Body Strong: `text-base font-semibold leading-[1.4] font-[Inter]`
+- Body Small: `text-sm font-normal leading-[1.4] font-[Inter]`
+- Always use Inter font family unless specified otherwise
+
+### 5. Colors
+- Primary Brand: `#2c2c2c` (background), `#f5f5f5` (text on brand)
+- Danger: `#ec221f` (background), `#fee9e7` (text on danger)
+- Default Text: `#1e1e1e`
+- Secondary Text: `#757575`
+- Tertiary Text: `#b3b3b3` (placeholders)
+- Borders: `#d9d9d9`
+- Backgrounds: `#ffffff` (default), `#f5f5f5` (secondary)
+
+### 6. Spacing Scale
+- Space/100: 4px (`gap-1`, `p-1`)
+- Space/150: 6px (`p-1.5`)
+- Space/200: 8px (`gap-2`, `p-2`)
+- Space/300: 12px (`gap-3`, `p-3`)
+- Space/400: 16px (`gap-4`, `p-4`)
+- Space/600: 24px (`gap-6`)
+
+### 7. Border Radius
+- Radius/200: 8px (`rounded-lg`)
+- Radius/400: 16px (`rounded-2xl`)
+- Radius/Full: 9999px (`rounded-full`)
+
+## File Organization
+
+### Component Files
+- Location: `components/ui/`
+- Naming: kebab-case (e.g., `button-group.tsx`, `input-field.tsx`)
+- Structure:
+  1. Imports
+  2. Variant definitions (cva)
+  3. Props interfaces
+  4. Component implementation
+  5. Exports
+
+### Spec Files
+- Location: `specs/`
+- Reference before implementing any component
+- Update when design changes
+
+## Code Patterns
+
+### Variant Definition Pattern
+```typescript
+const componentVariants = cva(
+  "base-classes",
+  {
+    variants: {
+      variant: {
+        default: "classes",
+        // ... other variants
+      },
+      size: {
+        default: "classes",
+        // ... other sizes
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
+)
+```
+
+### Component Pattern
+```typescript
+export interface ComponentProps
+  extends React.HTMLAttributes<HTMLElement>,
+    VariantProps<typeof componentVariants> {
+  // component-specific props
+}
+
+const Component = React.forwardRef<HTMLElement, ComponentProps>(
+  ({ className, variant, size, ...props }, ref) => {
+    return (
+      <element
+        ref={ref}
+        className={cn(componentVariants({ variant, size, className }))}
+        {...props}
+      />
+    )
+  }
+)
+Component.displayName = "Component"
+
+export { Component, componentVariants }
+```
+
+## Import Conventions
+
+### Utilities
+- Always import `cn` from `@/lib/utils`
+- Use `cn()` for className merging
+
+### Components
+- Use absolute imports with `@/components/ui/`
+- Import sub-components when needed (e.g., `AvatarImage`, `AvatarFallback`)
+
+## Accessibility Requirements
+
+### Required Practices
+- Use semantic HTML elements
+- Include proper ARIA attributes when needed
+- Ensure keyboard navigation works
+- Provide focus states for all interactive elements
+- Use proper labels for form fields
+- Include alt text for images
+- Test with screen readers
+
+### Focus States
+- Always include `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2c2c2c] focus-visible:ring-offset-2`
+- Use design token color for focus ring
+
+## Form Components
+
+### Field Components
+- Always include label support
+- Support error states with error prop
+- Use proper input/textarea/select elements
+- Associate labels with inputs using `htmlFor` and `id`
+- Generate unique IDs with `React.useId()` if not provided
+
+### Form Containers
+- `FormBox`: Vertical layout with `gap-6` (24px)
+- `Form`: Supports `singleLine` variant for inline forms
+- Always prevent default form submission unless handling it
+
+## Button Components
+
+### Variants
+- `default`: Primary action (dark background)
+- `destructive`: Danger action (red background)
+- `subtle`: Secondary action (light background)
+- `outline`: Outlined style
+- `ghost`: Minimal hover effect
+- `link`: Link-styled
+
+### Sizes
+- `sm`: 36px height
+- `default`: 40px height
+- `lg`: 44px height
+- `icon`: 32px × 32px, circular
+
+## Testing Requirements
+
+### Before Completing Implementation
+- [ ] Check spec file for component
+- [ ] Verify all props and variants work
+- [ ] Test all states (default, hover, active, disabled)
+- [ ] Verify accessibility (keyboard nav, ARIA, focus)
+- [ ] Check design tokens match spec
+- [ ] Verify responsive behavior
+- [ ] Test edge cases
+
+## Common Patterns
+
+### Conditional Classes
+```typescript
+className={cn(
+  "base-classes",
+  condition && "conditional-classes",
+  variant === "x" && "variant-classes"
+)}
+```
+
+### Children Cloning (for wrapper components)
+```typescript
+{React.Children.map(children, (child, index) => {
+  if (React.isValidElement(child)) {
+    return React.cloneElement(child as React.ReactElement<any>, {
+      className: cn("additional-classes", child.props.className),
+    })
+  }
+  return child
+})}
+```
+
+## Error Handling
+
+### Linter Errors
+- Fix all TypeScript errors
+- Fix all ESLint errors
+- Address warnings when possible
+- Use proper type definitions
+
+### Runtime Errors
+- Handle edge cases (empty arrays, null values, etc.)
+- Provide sensible defaults
+- Use optional chaining when appropriate
+
+## Documentation
+
+### Component Documentation
+- Include JSDoc comments for complex components
+- Document prop types clearly
+- Provide usage examples in comments when helpful
+
+### Spec Files
+- Keep spec files up to date
+- Include all variants and props
+- Document design tokens used
+- Provide usage examples
+
+## When Implementing New Components
+
+1. **Check Existing Components FIRST** (CRITICAL):
+   - Search `components/ui/` directory for similar functionality
+   - Check if existing components can be composed to achieve the goal
+   - Look for components that can be extended with variants
+   - Review `specs/README.md` for complete component list
+   - **ONLY create new component if no existing component can be reused or composed**
+
+2. **Check Specs**: Read the spec file in `specs/` directory (if it exists)
+3. **Use Design Tokens**: Reference `specs/design-tokens.md` for all values
+4. **Follow Patterns**: Use established component patterns
+5. **Compose Existing Components**: Prefer composition over new components
+6. **Test Thoroughly**: Verify all variants and states work
+7. **Update Specs**: Create/update spec file for new components
+8. **Add to Main Page**: Showcase new components in `app/page.tsx`
+
+## When Modifying Existing Components
+
+1. **Read Spec First**: Check `specs/` for the component specification
+2. **Maintain API**: Don't break existing props unless necessary
+3. **Update Specs**: Update spec file if behavior changes
+4. **Test Backwards Compatibility**: Ensure existing usage still works
+5. **Update Examples**: Update examples in `app/page.tsx` if needed
+
+## Design Token Usage
+
+### Colors
+```typescript
+// ✅ Correct - using design token
+className="bg-[#2c2c2c] text-[#f5f5f5]"
+
+// ❌ Wrong - hardcoded without token reference
+className="bg-gray-800 text-white"
+```
+
+### Spacing
+```typescript
+// ✅ Correct - using design token scale
+className="p-4 gap-3" // Space/400 and Space/300
+
+// ❌ Wrong - arbitrary spacing
+className="p-[13px] gap-[11px]"
+```
+
+## Component Naming
+
+- Use PascalCase for component names: `Button`, `InputField`
+- Use kebab-case for file names: `button.tsx`, `input-field.tsx`
+- Use camelCase for props and variables: `onValueChange`, `hasLabel`
+
+## TypeScript
+
+- Always use proper types
+- Use `React.ComponentProps` for extending HTML element props
+- Use `VariantProps` from cva for variant types
+- Avoid `any` type - use proper generics or `unknown`
+- Export interfaces for component props
+
+## Performance
+
+- Use `React.memo` for expensive components when appropriate
+- Avoid unnecessary re-renders
+- Use proper key props in lists
+- Optimize event handlers when needed
+
+## Git Conventions
+
+- Use descriptive commit messages
+- Reference spec files in commits when updating components
+- Keep commits focused on single components or features
+
+## Questions to Ask Before Implementing
+
+1. **Is there an existing component that does this?** (CHECK FIRST)
+   - Search `components/ui/` directory
+   - Check `specs/README.md` for component list
+   - Can existing components be composed to achieve this?
+2. **Can I extend an existing component instead?**
+   - Add a variant to existing component?
+   - Compose multiple existing components?
+3. Is there a spec file for this component?
+4. What design tokens should I use?
+5. What accessibility requirements are needed?
+6. Are there edge cases to handle?
+7. Should this be added to the main page examples?
+
+## Component Reuse Checklist
+
+Before creating any new component, verify:
+
+- [ ] Searched `components/ui/` for similar functionality
+- [ ] Checked if existing components can be composed
+- [ ] Reviewed `specs/README.md` for available components
+- [ ] Considered adding variant to existing component
+- [ ] Confirmed no existing component meets the need
+- [ ] Documented why new component is necessary
+

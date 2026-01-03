@@ -63,6 +63,44 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { FormBox } from '@/components/ui/form-box';
+import { InputField } from '@/components/ui/input-field';
+import { TextareaField } from '@/components/ui/textarea-field';
+import { CheckboxField } from '@/components/ui/checkbox-field';
+import { SelectField } from '@/components/ui/select-field';
+import { TextLink } from '@/components/ui/text-link';
+import { Form } from '@/components/ui/form';
+import { ButtonGroup } from '@/components/ui/button-group';
+import { Calendar } from '@/components/ui/calendar';
+import { AiChatBox } from '@/components/ui/ai-chat-box';
+import { AvatarBlock } from '@/components/ui/avatar-block';
+import { AvatarGroup } from '@/components/ui/avatar-group';
+import { Section } from '@/components/ui/section';
+import { Flex, FlexItem } from '@/components/ui/flex';
+import { TextContentHeading } from '@/components/ui/text-content-heading';
+import { TextContentTitle } from '@/components/ui/text-content-title';
+import { Header } from '@/components/ui/header';
+import { HeaderAuth } from '@/components/ui/header-auth';
+import { Footer } from '@/components/ui/footer';
+import { Hero, HeroActions, HeroForm, HeroNewsletter } from '@/components/ui/hero';
+import { Panel, PanelImage, PanelImageContent, PanelImageDouble } from '@/components/ui/panel';
+import { Tag } from '@/components/ui/tag';
+import { TagToggleGroup } from '@/components/ui/tag-toggle-group';
+import { CheckboxGroup } from '@/components/ui/checkbox-group';
+import { Navigation, NavigationPill } from '@/components/ui/navigation';
+import { ReviewCard } from '@/components/ui/review-card';
+import { ProductInfoCard } from '@/components/ui/product-info-card';
+import { PricingCard } from '@/components/ui/pricing-card';
+import { StatsCard } from '@/components/ui/stats-card';
+import { TestimonialCard } from '@/components/ui/testimonial-card';
+import { DateInputField } from '@/components/ui/date-input-field';
+import { DatePickerField } from '@/components/ui/date-picker-field';
+import { Search } from '@/components/ui/search';
+import { RadioField } from '@/components/ui/radio-field';
+import { SliderField } from '@/components/ui/slider-field';
+import { SwitchField } from '@/components/ui/switch-field';
+import { AiSidebar } from '@/components/ui/ai-sidebar';
+import { AiConversation } from '@/components/ui/ai-conversation';
 import {
   AlertCircle,
   CheckCircle2,
@@ -78,6 +116,10 @@ import {
   Trash2,
   HelpCircle,
   Package,
+  Bot,
+  Code,
+  Star,
+  TrendingUp,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -89,7 +131,7 @@ export default function Home() {
   return (
     <TooltipProvider>
       <div className="min-h-screen bg-background">
-        <div className="container mx-auto px-4 py-16 max-w-7xl">
+        <div className="container mx-auto px-4 pt-24 max-w-7xl">
           {/* Header */}
           <div className="mb-16 text-center">
             <div className="flex items-center justify-center gap-2 mb-4">
@@ -123,6 +165,7 @@ export default function Home() {
               <CardContent className="space-y-6">
                 <div className="flex flex-wrap gap-4">
                   <Button>Default</Button>
+                  <Button variant="subtle">Subtle</Button>
                   <Button variant="secondary">Secondary</Button>
                   <Button variant="destructive">Destructive</Button>
                   <Button variant="outline">Outline</Button>
@@ -212,6 +255,209 @@ export default function Home() {
                       Enable notifications
                     </Label>
                   </div>
+                </CardContent>
+              </Card>
+            </div>
+          </section>
+
+          {/* Forms Section */}
+          <section className="mb-16">
+            <h2 className="text-3xl font-semibold mb-6">Forms</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Contact Form</CardTitle>
+                  <CardDescription>FormBox with InputField and TextareaField</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <FormBox onSubmit={(e) => console.log('Contact form submitted')}>
+                    <InputField label="Name" placeholder="Value" />
+                    <InputField label="Surname" placeholder="Value" />
+                    <InputField label="Email" placeholder="Value" />
+                    <TextareaField label="Message" placeholder="Value" />
+                    <ButtonGroup align="justify">
+                      <Button variant="default">Submit</Button>
+                    </ButtonGroup>
+                  </FormBox>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Login Form</CardTitle>
+                  <CardDescription>FormBox with InputField and TextLink</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <FormBox onSubmit={(e) => console.log('Login form submitted')}>
+                    <InputField label="Email" placeholder="Value" />
+                    <InputField label="Password" placeholder="Value" type="password" />
+                    <ButtonGroup align="justify">
+                      <Button variant="default">Sign In</Button>
+                    </ButtonGroup>
+                    <TextLink href="#">Forgot password?</TextLink>
+                  </FormBox>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Register Form</CardTitle>
+                  <CardDescription>FormBox with CheckboxField</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <FormBox onSubmit={(e) => console.log('Register form submitted')}>
+                    <InputField label="Email" placeholder="Value" />
+                    <InputField label="Password" placeholder="Value" type="password" />
+                    <CheckboxField label="Label" description="Description" defaultChecked />
+                    <ButtonGroup align="justify">
+                      <Button variant="default">Register</Button>
+                    </ButtonGroup>
+                  </FormBox>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Forgot Password Form</CardTitle>
+                  <CardDescription>FormBox with ButtonGroup</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <FormBox onSubmit={(e) => console.log('Forgot password form submitted')}>
+                    <InputField label="Email" placeholder="Value" />
+                    <ButtonGroup align="center">
+                      <Button variant="subtle">Cancel</Button>
+                      <Button variant="default">Reset Password</Button>
+                    </ButtonGroup>
+                  </FormBox>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Shipping Form</CardTitle>
+                  <CardDescription>FormBox with SelectField and TextareaField</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <FormBox onSubmit={(e) => console.log('Shipping form submitted')}>
+                    <div className="text-base font-normal leading-[1.4] text-[#1e1e1e] font-[Inter]">
+                      We ship within 2 working days
+                    </div>
+                    <InputField label="Full Name" placeholder="Value" />
+                    <SelectField label="Location" placeholder="I am a placeholder...">
+                      <SelectItem value="value">Value</SelectItem>
+                      <SelectItem value="option-2">Option 2</SelectItem>
+                      <SelectItem value="option-3">Option 3</SelectItem>
+                      <SelectItem value="option-4">Option 4</SelectItem>
+                      <SelectItem value="option-5">Option 5</SelectItem>
+                    </SelectField>
+                    <TextareaField label="Delivery note" placeholder="Value" />
+                    <CheckboxField label="I accept the terms" description="Read our T&Cs" defaultChecked />
+                    <ButtonGroup align="justify">
+                      <Button variant="default">Save shipping information</Button>
+                    </ButtonGroup>
+                  </FormBox>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Newsletter Form</CardTitle>
+                  <CardDescription>Single-line Form with Input and Button</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Form singleLine onSubmit={(e) => console.log('Newsletter form submitted')}>
+                    <Input
+                      defaultValue="you@example.com"
+                      placeholder="you@example.com"
+                      className="flex-1 rounded-l-lg rounded-r-none border-r-0"
+                    />
+                    <Button variant="default" className="rounded-r-lg rounded-l-none">
+                      Submit
+                    </Button>
+                  </Form>
+                </CardContent>
+              </Card>
+            </div>
+          </section>
+
+          {/* Calendar Section */}
+          <section className="mb-16">
+            <h2 className="text-3xl font-semibold mb-6">Calendar</h2>
+            <Card>
+              <CardHeader>
+                <CardTitle>Date Picker</CardTitle>
+                <CardDescription>Calendar component with month and year selection</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex justify-center">
+                  <Calendar />
+                </div>
+              </CardContent>
+            </Card>
+          </section>
+
+          {/* AI Chat Box Section */}
+          <section className="mb-16">
+            <h2 className="text-3xl font-semibold mb-6">AI Chat Box</h2>
+            <Card>
+              <CardHeader>
+                <CardTitle>Chat Input</CardTitle>
+                <CardDescription>AI chat box with icon buttons and send button</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <AiChatBox
+                  placeholder="What would you like to know?"
+                  onSendClick={() => console.log('Send clicked')}
+                />
+              </CardContent>
+            </Card>
+          </section>
+
+          {/* Avatar Components Section */}
+          <section className="mb-16">
+            <h2 className="text-3xl font-semibold mb-6">Avatar Components</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Avatar Block</CardTitle>
+                  <CardDescription>Avatar with title and description</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <AvatarBlock
+                    title="Title"
+                    description="Description"
+                    src="https://github.com/shadcn.png"
+                    fallback="JD"
+                  />
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Avatar Group</CardTitle>
+                  <CardDescription>Grouped avatars with max count</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <AvatarGroup spacing="100" max={3}>
+                    <Avatar size="large">
+                      <AvatarImage src="https://github.com/shadcn.png" />
+                      <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
+                    <Avatar size="large">
+                      <AvatarImage src="https://github.com/vercel.png" />
+                      <AvatarFallback>VC</AvatarFallback>
+                    </Avatar>
+                    <Avatar size="large">
+                      <AvatarImage src="https://github.com/nextjs.png" />
+                      <AvatarFallback>NJ</AvatarFallback>
+                    </Avatar>
+                    <Avatar size="large">
+                      <AvatarFallback>AB</AvatarFallback>
+                    </Avatar>
+                    <Avatar size="large">
+                      <AvatarFallback>CD</AvatarFallback>
+                    </Avatar>
+                  </AvatarGroup>
                 </CardContent>
               </Card>
             </div>
@@ -600,39 +846,6 @@ export default function Home() {
             </Card>
           </section>
 
-          {/* Avatar Section */}
-          <section className="mb-16">
-            <h2 className="text-3xl font-semibold mb-6">Avatars</h2>
-            <Card>
-              <CardHeader>
-                <CardTitle>Avatar Components</CardTitle>
-                <CardDescription>
-                  User profile pictures and initials
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center gap-4">
-                  <Avatar>
-                    <AvatarImage
-                      src="https://github.com/shadcn.png"
-                      alt="@shadcn"
-                    />
-                    <AvatarFallback>CN</AvatarFallback>
-                  </Avatar>
-                  <Avatar>
-                    <AvatarFallback>JD</AvatarFallback>
-                  </Avatar>
-                  <Avatar>
-                    <AvatarFallback>AB</AvatarFallback>
-                  </Avatar>
-                  <Avatar className="h-16 w-16">
-                    <AvatarFallback className="text-lg">LG</AvatarFallback>
-                  </Avatar>
-                </div>
-              </CardContent>
-            </Card>
-          </section>
-
           {/* Progress & Skeleton Section */}
           <section className="mb-16">
             <h2 className="text-3xl font-semibold mb-6">Progress & Skeleton</h2>
@@ -911,11 +1124,405 @@ export default function Home() {
             </Card>
           </section>
 
-          {/* Footer */}
-          <footer className="text-center text-muted-foreground mt-16 pt-8 border-t">
-            <p>Built with shadcn/ui and Tailwind CSS</p>
-          </footer>
+          {/* Layout Components Section */}
+          <section className="mb-16">
+            <h2 className="text-3xl font-semibold mb-6">Layout Components</h2>
+            <Card>
+              <CardHeader>
+                <CardTitle>Section, Flex, TextContentHeading, TextContentTitle</CardTitle>
+                <CardDescription>
+                  Layout foundation components for building pages
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <Section padding="1200" className="bg-[#f5f5f5] rounded-lg">
+                  <TextContentHeading
+                    heading="Section Heading"
+                    subheading="Section subheading text"
+                    align="center"
+                  />
+                </Section>
+                <Flex container direction="column" gap="600">
+                  <TextContentTitle
+                    title="Hero Title"
+                    subtitle="Hero subtitle description"
+                    align="center"
+                  />
+                  <Flex wrap gap="400">
+                    <FlexItem size="half">
+                      <Card>
+                        <CardContent className="p-4">
+                          <p>Flex Item 1</p>
+                        </CardContent>
+                      </Card>
+                    </FlexItem>
+                    <FlexItem size="half">
+                      <Card>
+                        <CardContent className="p-4">
+                          <p>Flex Item 2</p>
+                        </CardContent>
+                      </Card>
+                    </FlexItem>
+                  </Flex>
+                </Flex>
+              </CardContent>
+            </Card>
+          </section>
+
+          {/* Header & Footer Section */}
+          <section className="mb-16">
+            <h2 className="text-3xl font-semibold mb-6">Header & Footer</h2>
+            <Card>
+              <CardHeader>
+                <CardTitle>Header and Footer Components</CardTitle>
+                <CardDescription>
+                  Site navigation and footer components
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-4">
+                  <Header
+                    logo="My Site"
+                    navItems={[
+                      { label: "Home", href: "/" },
+                      { label: "About", href: "/about" },
+                      { label: "Contact", href: "/contact" },
+                    ]}
+                    actions={<Button size="sm">Action</Button>}
+                  />
+                </div>
+                <div className="space-y-4">
+                  <HeaderAuth
+                    logo="My Site"
+                    onLogin={() => {}}
+                    onSignUp={() => {}}
+                  />
+                </div>
+                <div className="-mx-6">
+                  <Footer
+                    logo="My Site"
+                    columns={[
+                      {
+                        title: "Product",
+                        links: [
+                          { label: "Features", href: "/features" },
+                          { label: "Pricing", href: "/pricing" },
+                        ],
+                      },
+                      {
+                        title: "Company",
+                        links: [
+                          { label: "About", href: "/about" },
+                          { label: "Contact", href: "/contact" },
+                        ],
+                      },
+                    ]}
+                    copyright="© 2025 My Company"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </section>
+
+          {/* Hero Section */}
+          <section className="mb-16">
+            <h2 className="text-3xl font-semibold mb-6">Hero Components</h2>
+            <Card>
+              <CardHeader>
+                <CardTitle>Hero Variants</CardTitle>
+                <CardDescription>
+                  Hero sections for page headers
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <Hero variant="subtle" title="Hero Title" subtitle="Hero subtitle" />
+                <HeroActions
+                  variant="subtle"
+                  title="Hero with Actions"
+                  subtitle="Hero with action buttons"
+                  primaryAction={{ label: "Primary", onClick: () => {} }}
+                  secondaryAction={{ label: "Secondary", onClick: () => {} }}
+                />
+                <HeroNewsletter
+                  variant="subtle"
+                  title="Subscribe"
+                  subtitle="Get updates"
+                  onSubmit={(email) => console.log(email)}
+                />
+              </CardContent>
+            </Card>
+          </section>
+
+          {/* Panel Section */}
+          <section className="mb-16">
+            <h2 className="text-3xl font-semibold mb-6">Panel Components</h2>
+            <Card>
+              <CardHeader>
+                <CardTitle>Panel Layouts</CardTitle>
+                <CardDescription>
+                  Flexible panel layouts for images and content
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <PanelImage
+                  src="https://placehold.co/1200x675/E3E3E3/757575?text=Panel+Image"
+                  alt="Panel image"
+                  aspectRatio="16-9"
+                />
+                <PanelImageContent
+                  src="https://placehold.co/800x600/E3E3E3/757575?text=Panel+Content"
+                  alt="Panel content"
+                  heading="Panel Heading"
+                  subheading="Panel subheading"
+                  content="Panel content text goes here."
+                  aspectRatio="4-3"
+                />
+              </CardContent>
+            </Card>
+          </section>
+
+          {/* Card Components Section */}
+          <section className="mb-16">
+            <h2 className="text-3xl font-semibold mb-6">Card Components</h2>
+            <Flex type="third" gap="600" wrap>
+              <ReviewCard
+                stars={5}
+                title="Great Product"
+                body="This product exceeded my expectations. Highly recommended!"
+                date="January 15, 2025"
+                name="John Doe"
+                fallback="JD"
+              />
+              <ProductInfoCard
+                asset={<div className="w-full h-full bg-[#E3E3E3]" />}
+                rating={4.5}
+                heading="Product Name"
+                price="$99.99"
+                description="Product description"
+              />
+              <StatsCard
+                stat="1,234"
+                description="Active users"
+                icon={<TrendingUp className="h-6 w-6 text-[#1e1e1e]" />}
+              />
+              <TestimonialCard
+                heading='"This product changed my life!"'
+                name="Jane Smith"
+                username="@janesmith"
+                fallback="JS"
+              />
+              <PricingCard
+                heading="Pro Plan"
+                price="50"
+                priceCurrency="$"
+                priceLabel="/ mo"
+                action="Get Started"
+                listSlot={
+                  <ul className="space-y-2">
+                    <li>Feature 1</li>
+                    <li>Feature 2</li>
+                  </ul>
+                }
+              />
+            </Flex>
+          </section>
+
+          {/* Supporting Components Section */}
+          <section className="mb-16">
+            <h2 className="text-3xl font-semibold mb-6">Supporting Components</h2>
+            <Card>
+              <CardHeader>
+                <CardTitle>Tags, Navigation, CheckboxGroup</CardTitle>
+                <CardDescription>
+                  Supporting components for filters and navigation
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Tags</h3>
+                  <Flex wrap gap="400">
+                    <Tag>Default</Tag>
+                    <Tag variant="secondary">Secondary</Tag>
+                    <Tag variant="destructive">Error</Tag>
+                    <Tag variant="outline">Outline</Tag>
+                    <Tag onRemove={() => {}}>Removable</Tag>
+                  </Flex>
+                </div>
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Navigation Pills</h3>
+                  <Navigation>
+                    <NavigationPill isSelected>Monthly</NavigationPill>
+                    <NavigationPill>Yearly</NavigationPill>
+                    <NavigationPill>Link</NavigationPill>
+                  </Navigation>
+                </div>
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Tag Toggle Group</h3>
+                  <TagToggleGroup
+                    label="Sort by"
+                    items={[
+                      { id: "new", label: "New" },
+                      { id: "price-asc", label: "Price ascending" },
+                      { id: "price-desc", label: "Price descending" },
+                    ]}
+                    selectedIds={["new"]}
+                    onSelectionChange={(ids) => console.log(ids)}
+                  />
+                </div>
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Checkbox Group</h3>
+                  <CheckboxGroup
+                    items={[
+                      { value: "option1", label: "Option 1", description: "Description 1" },
+                      { value: "option2", label: "Option 2", description: "Description 2" },
+                    ]}
+                    selectedValues={["option1"]}
+                    onSelectionChange={(values) => console.log(values)}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </section>
+
+          {/* Form Field Components Section */}
+          <section className="mb-16">
+            <h2 className="text-3xl font-semibold mb-6">Form Field Components</h2>
+            <Card>
+              <CardHeader>
+                <CardTitle>Advanced Form Fields</CardTitle>
+                <CardDescription>
+                  Specialized form field components
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <Flex direction="column" gap="600" wrap>
+                  <DateInputField
+                    label="Date of Birth"
+                    description="Enter your date of birth"
+                    day="15"
+                    month="01"
+                    year="1990"
+                  />
+                  <DatePickerField
+                    label="Select Date"
+                    placeholder="Choose a date"
+                    value="2025-01-15"
+                  />
+                  <Search placeholder="Search products..." />
+                  <RadioField
+                    label="Select Option"
+                    options={[
+                      { value: "option1", label: "Option 1" },
+                      { value: "option2", label: "Option 2" },
+                    ]}
+                    value="option1"
+                    onValueChange={(value) => console.log(value)}
+                  />
+                  <SliderField
+                    label="Price Range"
+                    showOutput={true}
+                    min={0}
+                    max={1000}
+                    value={[500]}
+                    onValueChange={(value) => console.log(value)}
+                  />
+                  <SwitchField
+                    label="Enable notifications"
+                    description="Receive email notifications"
+                    checked={switchChecked}
+                    onCheckedChange={setSwitchChecked}
+                  />
+                </Flex>
+              </CardContent>
+            </Card>
+          </section>
+
+          {/* AI Chatbot Section */}
+          <section className="mb-16">
+            <h2 className="text-3xl font-semibold mb-6">AI Chatbot Components</h2>
+            <Card>
+              <CardHeader>
+                <CardTitle>AI Chatbot System</CardTitle>
+                <CardDescription>
+                  Complete AI chatbot interface components
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="flex gap-4">
+                  <AiSidebar
+                    chats={[
+                      { id: "1", title: "Analog Clock React app", active: true },
+                      { id: "2", title: "Simple Design System" },
+                      { id: "3", title: "Figma variable planning" },
+                    ]}
+                    user={{
+                      email: "flippy@figma.com",
+                      fallback: "F",
+                    }}
+                    onNewChat={() => {}}
+                  />
+                  <div className="flex-1 flex flex-col gap-6 p-6">
+                    <AiConversation
+                      messages={[
+                        {
+                          type: "user",
+                          content: "Hey Flippy! Write me a script for building an Analog Clock.",
+                        },
+                        {
+                          type: "assistant",
+                          content: "Sure. Here is a Typescript code block for your Analog Clock project. It is built using React, and uses the local time for London, England as standard. Let me know if you would like to make any refinements to the code.",
+                          icon: <Bot className="h-5 w-5 text-[#1e1e1e]" />,
+                          code: `import React, { useState, useEffect } from "react";
+
+export default function AnalogClock() {
+  const [time, setTime] = useState({
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
+
+  useEffect(() => {
+    const updateClock = () => {
+      const now = new Date();
+      setTime({
+        hours: now.getHours(),
+        minutes: now.getMinutes(),
+        seconds: now.getSeconds(),
+      });
+    };
+
+    updateClock();
+    const timerId = setInterval(updateClock, 1000);
+    return () => clearInterval(timerId);
+  }, []);
+
+  return (
+    <div>
+      {time.hours}:{time.minutes}:{time.seconds}
+    </div>
+  );
+}`,
+                        },
+                      ]}
+                    />
+                    <AiChatBox
+                      placeholder="What would you like to know?"
+                      value=""
+                      onChange={() => {}}
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </section>
         </div>
+
+        {/* Footer - Outside container to prevent overlap */}
+        <footer className="w-full text-center text-muted-foreground pt-8 pb-8 border-t bg-background relative z-50">
+          <div className="container mx-auto px-4">
+            <p>Built with shadcn/ui and Tailwind CSS</p>
+          </div>
+        </footer>
       </div>
     </TooltipProvider>
   );
