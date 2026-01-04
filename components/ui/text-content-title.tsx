@@ -34,11 +34,11 @@ const TextContentTitle = React.forwardRef<
       className={cn(textContentTitleVariants({ align, className }))}
       {...props}
     >
-      <h1 className="text-5xl font-bold leading-[1.2] tracking-[-0.03em] text-[#1e1e1e] font-[Inter]">
+      <h1 className="text-[72px] font-bold leading-[1.2] tracking-[-3px] text-[#1e1e1e] font-[Inter]">
         {title}
       </h1>
       {subtitle && (
-        <p className="text-xl font-normal leading-[1.2] text-[#757575] font-[Inter]">
+        <p className="text-[32px] font-normal leading-[1.2] text-[#757575] font-[Inter]">
           {subtitle}
         </p>
       )}

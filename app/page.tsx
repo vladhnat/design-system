@@ -79,6 +79,8 @@ import { Section } from '@/components/ui/section';
 import { Flex, FlexItem } from '@/components/ui/flex';
 import { TextContentHeading } from '@/components/ui/text-content-heading';
 import { TextContentTitle } from '@/components/ui/text-content-title';
+import { TextHeading } from '@/components/ui/text-heading';
+import { Text } from '@/components/ui/text';
 import { Header } from '@/components/ui/header';
 import { HeaderAuth } from '@/components/ui/header-auth';
 import { Footer } from '@/components/ui/footer';
@@ -348,9 +350,7 @@ export default function Home() {
                 </CardHeader>
                 <CardContent>
                   <FormBox onSubmit={(e) => console.log('Shipping form submitted')}>
-                    <div className="text-base font-normal leading-[1.4] text-[#1e1e1e] font-[Inter]">
-                      We ship within 2 working days
-                    </div>
+                    <Text>We ship within 2 working days</Text>
                     <InputField label="Full Name" placeholder="Value" />
                     <SelectField label="Location" placeholder="I am a placeholder...">
                       <SelectItem value="value">Value</SelectItem>
@@ -1130,6 +1130,45 @@ export default function Home() {
                 <Button variant="outline">Cancel</Button>
                 <Button>Save Changes</Button>
               </CardFooter>
+            </Card>
+          </section>
+
+          {/* Typography Components Section */}
+          <section className="mb-16">
+            <h2 className="text-3xl font-semibold mb-6">Typography Components</h2>
+            <Card>
+              <CardHeader>
+                <CardTitle>TextHeading and Text</CardTitle>
+                <CardDescription>
+                  Typography components for card titles and body text
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-4">
+                  <TextHeading>Card Title Example</TextHeading>
+                  <Text>
+                    This is body text using the Text component. It provides consistent
+                    typography styling for body content throughout the design system.
+                  </Text>
+                </div>
+                <div className="space-y-4">
+                  <TextHeading as="h2">Heading as H2</TextHeading>
+                  <Text as="div">
+                    Text component can also be used as a div or span element by using
+                    the as prop. This provides flexibility while maintaining consistent styling.
+                  </Text>
+                </div>
+                <Card variant="stroke" direction="horizontal" className="gap-6 p-6">
+                  <div className="w-40 h-40 bg-[#E3E3E3] rounded-lg flex-shrink-0" />
+                  <div className="flex flex-col gap-4 flex-1">
+                    <TextHeading>Card with TextHeading</TextHeading>
+                    <Text>
+                      Example of using TextHeading and Text components within a card
+                      layout, matching the pattern used in the about page.
+                    </Text>
+                  </div>
+                </Card>
+              </CardContent>
             </Card>
           </section>
 

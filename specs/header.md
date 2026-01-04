@@ -6,10 +6,12 @@ The Header component provides a site header with logo, navigation items, and act
 ## Design Tokens
 
 ### Container
+- Position: `fixed` at top of viewport
 - Width: `100%` (w-full)
 - Border: `1px solid #d9d9d9` (Border/Default/Default) on bottom
 - Background: `#ffffff` (Background/Default/Default)
 - Height: `64px` (h-16)
+- Z-index: `50` (z-50) to stay above other content
 
 ### Inner Container
 - Max Width: Container width

@@ -50,6 +50,20 @@ const Footer = React.forwardRef<HTMLElement, FooterProps>(
                   ) : (
                     logo
                   )}
+                  {socialLinks && socialLinks.length > 0 && (
+                    <div className="flex items-center gap-4">
+                      {socialLinks.map((link) => (
+                        <Link
+                          key={link.href}
+                          href={link.href}
+                          className="text-[#757575] hover:text-[#1e1e1e] transition-colors"
+                          aria-label={link.label}
+                        >
+                          {link.icon || link.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
               {columns?.map((column, index) => (
@@ -72,27 +86,11 @@ const Footer = React.forwardRef<HTMLElement, FooterProps>(
               ))}
             </div>
           )}
-          {(copyright || socialLinks) && (
+          {copyright && (
             <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-8 border-t border-[#d9d9d9]">
-              {copyright && (
-                <p className="text-base font-normal leading-[1.4] text-[#757575] font-[Inter]">
-                  {copyright}
-                </p>
-              )}
-              {socialLinks && socialLinks.length > 0 && (
-                <div className="flex items-center gap-4">
-                  {socialLinks.map((link) => (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      className="text-base font-normal leading-[1.4] text-[#757575] font-[Inter] hover:text-[#1e1e1e] transition-colors"
-                      aria-label={link.label}
-                    >
-                      {link.icon || link.label}
-                    </Link>
-                  ))}
-                </div>
-              )}
+              <p className="text-base font-normal leading-[1.4] text-[#757575] font-[Inter]">
+                {copyright}
+              </p>
             </div>
           )}
         </div>

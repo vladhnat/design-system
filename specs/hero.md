@@ -7,8 +7,8 @@ The Hero component is a large banner section used for page headers, with multipl
 
 ### Container
 - Width: `100%` (w-full)
-- Min Height: `400px` (min-h-[400px])
-- Padding: `16px` horizontal (px-4), `64px` vertical (py-16)
+- Min Height: `100vh` (min-h-screen) - Full viewport height
+- Padding: `16px` horizontal (px-4)
 - Layout: Flex column, items-center, justify-center
 
 ### Variants

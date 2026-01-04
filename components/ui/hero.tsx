@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input"
 import Image from "next/image"
 
 const heroVariants = cva(
-  "flex flex-col items-center justify-center w-full min-h-[400px] px-4 py-16",
+  "flex flex-col items-center justify-center w-full px-4 min-h-screen pt-16",
   {
     variants: {
       variant: {

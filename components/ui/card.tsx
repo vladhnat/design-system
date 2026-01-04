@@ -25,16 +25,37 @@ const cardVariants = cva(
 
 export interface CardProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof cardVariants> {}
+    VariantProps<typeof cardVariants> {
+  asset?: React.ReactNode
+}
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, variant, direction, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn(cardVariants({ variant, direction, className }))}
-      {...props}
-    />
-  )
+  ({ className, variant, direction, asset, children, ...props }, ref) => {
+    const cardContent = (
+      <>
+        {asset && (
+          <div className={cn(
+            direction === "horizontal" ? "flex-shrink-0" : "w-full",
+            direction === "horizontal" ? "w-40 h-40" : "aspect-square",
+            "relative rounded-lg overflow-hidden bg-[#E3E3E3]"
+          )}>
+            {asset}
+          </div>
+        )}
+        {children}
+      </>
+    )
+
+    return (
+      <div
+        ref={ref}
+        className={cn(cardVariants({ variant, direction, className }))}
+        {...props}
+      >
+        {cardContent}
+      </div>
+    )
+  }
 )
 Card.displayName = "Card"
 

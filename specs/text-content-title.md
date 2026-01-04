@@ -11,15 +11,15 @@ The TextContentTitle component displays a large hero title with an optional subt
 
 ### Title
 - Font Family: Inter
-- Font Size: `48px` (text-5xl)
+- Font Size: `72px` (Title Hero/Size)
 - Font Weight: `700` (Bold)
 - Line Height: `1.2`
-- Letter Spacing: `-0.03em`
+- Letter Spacing: `-3px`
 - Color: `#1e1e1e` (Text/Default/Default)
 
 ### Subtitle
 - Font Family: Inter
-- Font Size: `20px` (text-xl)
+- Font Size: `32px` (Subtitle/Size Base)
 - Font Weight: `400` (Regular)
 - Line Height: `1.2`
 - Color: `#757575` (Text/Default/Secondary)
