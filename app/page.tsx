@@ -120,6 +120,7 @@ import {
   Code,
   Star,
   TrendingUp,
+  FileText,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -144,12 +145,20 @@ export default function Home() {
               A comprehensive component library built with shadcn/ui and
               Tailwind CSS
             </p>
-            <Link href="/products">
-              <Button size="lg" className="gap-2">
-                <Package className="h-5 w-5" />
-                View Product Management
-              </Button>
-            </Link>
+            <ButtonGroup align="center" className="gap-4">
+              <Link href="/products">
+                <Button size="lg" className="gap-2">
+                  <Package className="h-5 w-5" />
+                  View Product Management
+                </Button>
+              </Link>
+              <Link href="/about">
+                <Button size="lg" variant="subtle" className="gap-2">
+                  <FileText className="h-5 w-5" />
+                  View About Page
+                </Button>
+              </Link>
+            </ButtonGroup>
           </div>
 
           {/* Buttons Section */}
