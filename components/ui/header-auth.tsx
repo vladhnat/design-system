@@ -35,7 +35,7 @@ const HeaderAuth = React.forwardRef<HTMLElement, HeaderAuthProps>(
   ) => {
     const actions = user ? (
       <div className="flex items-center gap-2">
-        <span className="text-base font-normal leading-[1.4] text-[#1e1e1e] font-[Inter]">
+        <span className="text-base font-normal leading-[1.4] text-[hsl(var(--text-default))] font-[Inter]">
           {user.name || user.email}
         </span>
         {onLogout && (

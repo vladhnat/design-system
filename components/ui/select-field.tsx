@@ -33,7 +33,7 @@ const SelectField = React.forwardRef<
       {label && (
         <Label
           htmlFor={selectId}
-          className="text-base font-semibold leading-[1.4] text-[#1e1e1e] font-[Inter]"
+          className="text-base font-semibold leading-[1.4] text-[hsl(var(--text-default))] font-[Inter] cursor-pointer"
         >
           {label}
         </Label>
@@ -43,8 +43,8 @@ const SelectField = React.forwardRef<
           ref={ref}
           id={selectId}
           className={cn(
-            "h-10 rounded-lg border border-[#d9d9d9] bg-[#ffffff] px-3 py-2 text-base font-normal leading-[1.4] text-[#1e1e1e] font-[Inter] focus:ring-2 focus:ring-[#2c2c2c] focus:ring-offset-2",
-            error && "border-[#ec221f]",
+            "h-10 rounded-lg border border-[hsl(var(--border-default))] bg-[hsl(var(--bg-default))] px-3 py-2 text-base font-normal leading-[1.4] text-[hsl(var(--text-default))] font-[Inter] focus:ring-2 focus:ring-[hsl(var(--bg-brand))] focus:ring-offset-2",
+            error && "border-[hsl(var(--border-danger))]",
             className
           )}
         >
@@ -53,7 +53,7 @@ const SelectField = React.forwardRef<
         <SelectContent>{children}</SelectContent>
       </Select>
       {error && (
-        <p className="text-sm font-normal leading-[1.4] text-[#ec221f] font-[Inter]">
+        <p className="text-sm font-normal leading-[1.4] text-[hsl(var(--bg-danger))] font-[Inter]">
           {error}
         </p>
       )}

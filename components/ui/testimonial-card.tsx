@@ -18,12 +18,12 @@ const TestimonialCard = React.forwardRef<HTMLDivElement, TestimonialCardProps>(
       <div
         ref={ref}
         className={cn(
-          "flex flex-col gap-4 p-6 rounded-lg border border-[#d9d9d9] bg-[#ffffff]",
+          "flex flex-col gap-4 p-6 rounded-lg border border-[hsl(var(--border-default))] bg-[hsl(var(--bg-default))]",
           className
         )}
         {...props}
       >
-        <h3 className="text-2xl font-semibold leading-[1.2] tracking-[-0.02em] text-[#1e1e1e] font-[Inter]">
+        <h3 className="text-2xl font-semibold leading-[1.2] tracking-[-0.02em] text-[hsl(var(--text-default))] font-[Inter]">
           {heading}
         </h3>
         <div className="flex items-center gap-3">
@@ -32,10 +32,10 @@ const TestimonialCard = React.forwardRef<HTMLDivElement, TestimonialCardProps>(
             {fallback && <AvatarFallback>{fallback}</AvatarFallback>}
           </Avatar>
           <div className="flex flex-col">
-            <div className="text-base font-semibold leading-[1.4] text-[#303030] font-[Inter]">
+            <div className="text-base font-semibold leading-[1.4] text-[hsl(var(--text-default))] font-[Inter]">
               {name}
             </div>
-            <div className="text-base font-normal leading-[1.4] text-[#757575] font-[Inter]">
+            <div className="text-base font-normal leading-[1.4] text-[hsl(var(--text-secondary))] font-[Inter]">
               {username}
             </div>
           </div>

@@ -34,11 +34,11 @@ const TextContentHeading = React.forwardRef<
       className={cn(textContentHeadingVariants({ align, className }))}
       {...props}
     >
-      <h2 className="text-2xl font-semibold leading-[1.2] tracking-[-0.02em] text-[#1e1e1e] font-[Inter]">
+      <h2 className="text-2xl font-semibold leading-[1.2] tracking-[-0.02em] text-[hsl(var(--text-default))] font-[Inter]">
         {heading}
       </h2>
       {subheading && (
-        <p className="text-base font-normal leading-[1.2] text-[#757575] font-[Inter]">
+        <p className="text-base font-normal leading-[1.2] text-[hsl(var(--text-secondary))] font-[Inter]">
           {subheading}
         </p>
       )}

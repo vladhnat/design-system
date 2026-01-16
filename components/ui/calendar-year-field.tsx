@@ -26,20 +26,20 @@ const CalendarYearField = React.forwardRef<
     >
       <div className="relative w-full">
         <div
-          className="bg-[#ffffff] border border-[#d9d9d9] flex gap-2 items-center p-1.5 rounded-lg w-full cursor-pointer"
+          className="bg-[hsl(var(--bg-default))] border border-[hsl(var(--border-default))] flex gap-2 items-center p-1.5 rounded-lg w-full cursor-pointer"
           onClick={() => setIsOpen(!isOpen)}
         >
-          <p className="flex-1 text-base font-normal leading-none text-[#1e1e1e] font-[Inter]">
+          <p className="flex-1 text-base font-normal leading-none text-[hsl(var(--text-default))] font-[Inter]">
             {value}
           </p>
-          <ChevronDown className="shrink-0 size-4 text-[#1e1e1e]" />
+          <ChevronDown className="shrink-0 size-4 text-[hsl(var(--icon-default))]" />
         </div>
         {isOpen && (
-          <div className="absolute bg-[#ffffff] border border-[#d9d9d9] flex flex-col gap-2 items-center p-2 rounded-lg shadow-lg z-50 top-9 left-0 min-w-full max-h-60 overflow-y-auto">
+          <div className="absolute bg-[hsl(var(--bg-default))] border border-[hsl(var(--border-default))] flex flex-col gap-2 items-center p-2 rounded-lg shadow-lg z-50 top-9 left-0 min-w-full max-h-60 overflow-y-auto">
             {years.map((year) => (
               <button
                 key={year}
-                className="w-full text-left text-base font-normal leading-[1.4] text-[#1e1e1e] font-[Inter] hover:bg-[#f5f5f5] px-2 py-1 rounded"
+                className="w-full text-left text-base font-normal leading-[1.4] text-[hsl(var(--text-default))] font-[Inter] hover:bg-[hsl(var(--bg-secondary))] px-2 py-1 rounded cursor-pointer"
                 onClick={() => {
                   onValueChange?.(String(year))
                   setIsOpen(false)

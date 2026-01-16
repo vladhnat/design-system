@@ -130,7 +130,7 @@ const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
       <div
         ref={ref}
         className={cn(
-          "flex flex-col gap-4 items-center p-4 rounded-2xl border border-[#d9d9d9] bg-[#ffffff]",
+          "flex flex-col gap-4 items-center p-4 rounded-2xl border border-[hsl(var(--border-default))] bg-[hsl(var(--bg-default))]",
           className
         )}
         {...props}
@@ -144,7 +144,7 @@ const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
             onClick={handlePreviousMonth}
             className="h-8 w-8 rounded-full p-2"
           >
-            <ChevronLeft className="h-5 w-5 text-[#1e1e1e]" />
+            <ChevronLeft className="h-5 w-5 text-[hsl(var(--icon-default))]" />
           </Button>
           <CalendarSelectGroup
             month={monthNames[currentMonth]}
@@ -163,7 +163,7 @@ const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
             onClick={handleNextMonth}
             className="h-8 w-8 rounded-full p-2"
           >
-            <ChevronRight className="h-5 w-5 text-[#1e1e1e]" />
+            <ChevronRight className="h-5 w-5 text-[hsl(var(--icon-default))]" />
           </Button>
         </div>
 
@@ -172,7 +172,7 @@ const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
           {weekDays.map((day) => (
             <div
               key={day}
-              className="flex-1 flex items-center justify-center text-xs font-normal leading-5 text-[#757575] text-center"
+              className="flex-1 flex items-center justify-center text-xs font-normal leading-5 text-[hsl(var(--text-secondary))] text-center"
             >
               {day}
             </div>
@@ -204,8 +204,8 @@ const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
                     state={state}
                     onClick={() => day && inCurrentMonth && handleDateClick(day)}
                     className={cn(
-                      !inCurrentMonth && "text-[#b3b3b3]",
-                      selectedDay && "bg-[#2c2c2c] text-[#f5f5f5]"
+                      !inCurrentMonth && "text-[hsl(var(--text-tertiary))]",
+                      selectedDay && "bg-[hsl(var(--bg-brand))] text-[hsl(var(--text-on-brand))]"
                     )}
                   />
                 )

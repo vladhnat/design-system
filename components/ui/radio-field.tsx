@@ -39,12 +39,12 @@ const RadioField = React.forwardRef<HTMLDivElement, RadioFieldProps>(
         {...props}
       >
         {label && (
-          <Label className="text-base font-normal leading-[1.4] text-[#1e1e1e] font-[Inter]">
+          <Label className="text-base font-normal leading-[1.4] text-[hsl(var(--text-default))] font-[Inter]">
             {label}
           </Label>
         )}
         {description && (
-          <p className="text-base font-normal leading-[1.4] text-[#757575] font-[Inter]">
+          <p className="text-base font-normal leading-[1.4] text-[hsl(var(--text-secondary))] font-[Inter]">
             {description}
           </p>
         )}
@@ -58,7 +58,7 @@ const RadioField = React.forwardRef<HTMLDivElement, RadioFieldProps>(
               <RadioGroupItem value={option.value} id={`${fieldId}-${option.value}`} />
               <Label
                 htmlFor={`${fieldId}-${option.value}`}
-                className="text-base font-normal leading-[1.4] text-[#1e1e1e] font-[Inter] cursor-pointer"
+                className="text-base font-normal leading-[1.4] text-[hsl(var(--text-default))] font-[Inter] cursor-pointer"
               >
                 {option.label}
               </Label>
@@ -66,7 +66,7 @@ const RadioField = React.forwardRef<HTMLDivElement, RadioFieldProps>(
           ))}
         </RadioGroup>
         {error && (
-          <p className="text-sm font-normal leading-[1.4] text-[#ec221f] font-[Inter]">
+          <p className="text-sm font-normal leading-[1.4] text-[hsl(var(--bg-danger))] font-[Inter]">
             {error}
           </p>
         )}

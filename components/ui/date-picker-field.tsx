@@ -57,12 +57,12 @@ const DatePickerField = React.forwardRef<HTMLDivElement, DatePickerFieldProps>(
         {...props}
       >
         {label && (
-          <Label className="text-base font-normal leading-[1.4] text-[#1e1e1e] font-[Inter]">
+          <Label className="text-base font-normal leading-[1.4] text-[hsl(var(--text-default))] font-[Inter] cursor-pointer">
             {label}
           </Label>
         )}
         {description && (
-          <p className="text-base font-normal leading-[1.4] text-[#757575] font-[Inter]">
+          <p className="text-base font-normal leading-[1.4] text-[hsl(var(--text-secondary))] font-[Inter]">
             {description}
           </p>
         )}
@@ -74,11 +74,11 @@ const DatePickerField = React.forwardRef<HTMLDivElement, DatePickerFieldProps>(
             disabled={isDisabled}
             className={cn(
               "pr-10",
-              hasError && "border-[#ec221f]",
-              isPlaceholder && "text-[#b3b3b3]"
+              hasError && "border-[hsl(var(--border-danger))]",
+              isPlaceholder && "text-[hsl(var(--text-tertiary))]"
             )}
           />
-          <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#1e1e1e] pointer-events-none" />
+          <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[hsl(var(--icon-default))] pointer-events-none" />
         </div>
       </div>
     )

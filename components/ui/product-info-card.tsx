@@ -19,29 +19,29 @@ const ProductInfoCard = React.forwardRef<HTMLDivElement, ProductInfoCardProps>(
       <div
         ref={ref}
         className={cn(
-          "flex flex-col gap-4 p-6 rounded-lg border border-[#d9d9d9] bg-[#ffffff]",
+          "flex flex-col gap-4 p-6 rounded-lg border border-[hsl(var(--border-default))] bg-[hsl(var(--bg-default))]",
           className
         )}
         {...props}
       >
-        <div className="w-full aspect-square rounded-lg overflow-hidden bg-[#E3E3E3]">
+        <div className="w-full aspect-square rounded-lg overflow-hidden bg-[hsl(var(--bg-muted))]">
           {asset}
         </div>
         <div className="flex items-center gap-1">
-          <Star className="h-4 w-4 fill-[#2c2c2c] text-[#2c2c2c]" />
-          <span className="text-base font-normal leading-[1.4] text-[#1e1e1e] font-[Inter]">
+          <Star className="h-4 w-4 fill-[hsl(var(--bg-brand))] text-[hsl(var(--bg-brand))]" />
+          <span className="text-base font-normal leading-[1.4] text-[hsl(var(--text-default))] font-[Inter]">
             {rating}
           </span>
         </div>
         <div className="flex flex-col gap-2">
-          <h3 className="text-base font-semibold leading-[1.4] text-[#1e1e1e] font-[Inter]">
+          <h3 className="text-base font-semibold leading-[1.4] text-[hsl(var(--text-default))] font-[Inter]">
             {heading}
           </h3>
-          <p className="text-sm font-normal leading-[1.4] text-[#1e1e1e] font-[Inter]">
+          <p className="text-sm font-normal leading-[1.4] text-[hsl(var(--text-default))] font-[Inter]">
             {description}
           </p>
         </div>
-        <div className="text-base font-semibold leading-[1.4] text-[#1e1e1e] font-[Inter]">
+        <div className="text-base font-semibold leading-[1.4] text-[hsl(var(--text-default))] font-[Inter]">
           {price}
         </div>
       </div>

@@ -4,17 +4,17 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const badgeVariants = cva(
-  "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold leading-none transition-colors focus:outline-none focus:ring-2 focus:ring-[#2c2c2c] focus:ring-offset-2 font-[Inter]",
+  "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold leading-none transition-colors focus:outline-none focus:ring-2 focus:ring-[hsl(var(--bg-brand))] focus:ring-offset-2 font-[Inter]",
   {
     variants: {
       variant: {
         default:
-          "border-transparent bg-[#2c2c2c] text-[#f5f5f5] hover:bg-[#2c2c2c]/80",
+          "border-transparent bg-[hsl(var(--bg-brand))] text-[hsl(var(--text-on-brand))] hover:bg-[hsl(var(--bg-brand))]/80",
         secondary:
-          "border-transparent bg-[#f5f5f5] text-[#303030] hover:bg-[#f5f5f5]/80",
+          "border-transparent bg-[hsl(var(--bg-secondary))] text-[hsl(var(--text-default))] hover:bg-[hsl(var(--bg-secondary))]/80",
         destructive:
-          "border-transparent bg-[#ec221f] text-[#fee9e7] hover:bg-[#ec221f]/80",
-        outline: "text-[#1e1e1e] border-[#d9d9d9]",
+          "border-transparent bg-[hsl(var(--bg-danger))] text-[hsl(var(--text-on-danger))] hover:bg-[hsl(var(--bg-danger))]/80",
+        outline: "text-[hsl(var(--text-default))] border-[hsl(var(--border-default))]",
       },
     },
     defaultVariants: {

@@ -47,8 +47,8 @@ const navigationPillVariants = cva(
   {
     variants: {
       isSelected: {
-        true: "bg-[#2c2c2c] text-[#f5f5f5]",
-        false: "bg-transparent text-[#1e1e1e] hover:bg-[#f5f5f5]",
+        true: "bg-[hsl(var(--bg-brand))] text-[hsl(var(--text-on-brand))]",
+        false: "bg-transparent text-[hsl(var(--text-default))] hover:bg-[hsl(var(--bg-secondary))]",
       },
     },
     defaultVariants: {

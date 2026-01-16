@@ -44,7 +44,7 @@ const AvatarGroup = React.forwardRef<HTMLDivElement, AvatarGroupProps>(
         {remainingCount > 0 && (
           <div
             className={cn(
-              "flex items-center justify-center rounded-lg bg-[#f5f5f5] text-sm font-normal leading-[1.4] text-[#303030] font-[Inter]",
+              "flex items-center justify-center rounded-lg bg-[hsl(var(--bg-secondary))] text-sm font-normal leading-[1.4] text-[hsl(var(--text-default))] font-[Inter]",
               spacingMap[spacing],
               size === "sm" && "h-8 w-8",
               size === "default" && "h-10 w-10",

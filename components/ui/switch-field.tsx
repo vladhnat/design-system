@@ -49,19 +49,19 @@ const SwitchField = React.forwardRef<HTMLDivElement, SwitchFieldProps>(
           {label && (
             <Label
               htmlFor={switchId}
-              className="text-base font-normal leading-[1.4] text-[#1e1e1e] font-[Inter] cursor-pointer"
+              className="text-base font-normal leading-[1.4] text-[hsl(var(--text-default))] font-[Inter] cursor-pointer"
             >
               {label}
             </Label>
           )}
         </div>
         {description && (
-          <p className="text-base font-normal leading-[1.4] text-[#757575] font-[Inter] pl-10">
+          <p className="text-base font-normal leading-[1.4] text-[hsl(var(--text-secondary))] font-[Inter] pl-10">
             {description}
           </p>
         )}
         {error && (
-          <p className="text-sm font-normal leading-[1.4] text-[#ec221f] font-[Inter] pl-10">
+          <p className="text-sm font-normal leading-[1.4] text-[hsl(var(--bg-danger))] font-[Inter] pl-10">
             {error}
           </p>
         )}

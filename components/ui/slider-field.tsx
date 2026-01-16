@@ -60,18 +60,18 @@ const SliderField = React.forwardRef<HTMLDivElement, SliderFieldProps>(
       >
         <div className="flex items-center justify-between">
           {label && (
-            <Label className="text-base font-normal leading-[1.4] text-[#1e1e1e] font-[Inter]">
+            <Label className="text-base font-normal leading-[1.4] text-[hsl(var(--text-default))] font-[Inter] cursor-pointer">
               {label}
             </Label>
           )}
           {showOutput && (
-            <span className="text-sm font-normal leading-[1.4] text-[#1e1e1e] font-[Inter]">
+            <span className="text-sm font-normal leading-[1.4] text-[hsl(var(--text-default))] font-[Inter]">
               {currentValue[0]}
             </span>
           )}
         </div>
         {description && (
-          <p className="text-sm font-normal leading-[1.4] text-[#757575] font-[Inter]">
+          <p className="text-sm font-normal leading-[1.4] text-[hsl(var(--text-secondary))] font-[Inter]">
             {description}
           </p>
         )}
@@ -84,7 +84,7 @@ const SliderField = React.forwardRef<HTMLDivElement, SliderFieldProps>(
           step={step}
         />
         {error && (
-          <p className="text-sm font-normal leading-[1.4] text-[#ec221f] font-[Inter]">
+          <p className="text-sm font-normal leading-[1.4] text-[hsl(var(--bg-danger))] font-[Inter]">
             {error}
           </p>
         )}

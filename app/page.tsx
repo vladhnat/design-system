@@ -1159,7 +1159,7 @@ export default function Home() {
                   </Text>
                 </div>
                 <Card variant="stroke" direction="horizontal" className="gap-6 p-6">
-                  <div className="w-40 h-40 bg-[#E3E3E3] rounded-lg flex-shrink-0" />
+                  <div className="w-40 h-40 bg-[hsl(var(--bg-muted))] rounded-lg flex-shrink-0" />
                   <div className="flex flex-col gap-4 flex-1">
                     <TextHeading>Card with TextHeading</TextHeading>
                     <Text>
@@ -1183,7 +1183,7 @@ export default function Home() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-                <Section padding="1200" className="bg-[#f5f5f5] rounded-lg">
+                <Section padding="1200" className="bg-[hsl(var(--bg-secondary))] rounded-lg">
                   <TextContentHeading
                     heading="Section Heading"
                     subheading="Section subheading text"
@@ -1342,7 +1342,7 @@ export default function Home() {
                 fallback="JD"
               />
               <ProductInfoCard
-                asset={<div className="w-full h-full bg-[#E3E3E3]" />}
+                asset={<div className="w-full h-full bg-[hsl(var(--bg-muted))]" />}
                 rating={4.5}
                 heading="Product Name"
                 price="$99.99"
@@ -1351,7 +1351,7 @@ export default function Home() {
               <StatsCard
                 stat="1,234"
                 description="Active users"
-                icon={<TrendingUp className="h-6 w-6 text-[#1e1e1e]" />}
+                icon={<TrendingUp className="h-6 w-6 text-[hsl(var(--icon-default))]" />}
               />
               <TestimonialCard
                 heading='"This product changed my life!"'
@@ -1519,7 +1519,7 @@ export default function Home() {
                         {
                           type: "assistant",
                           content: "Sure. Here is a Typescript code block for your Analog Clock project. It is built using React, and uses the local time for London, England as standard. Let me know if you would like to make any refinements to the code.",
-                          icon: <Bot className="h-5 w-5 text-[#1e1e1e]" />,
+                          icon: <Bot className="h-5 w-5 text-[hsl(var(--icon-default))]" />,
                           code: `import React, { useState, useEffect } from "react";
 
 export default function AnalogClock() {

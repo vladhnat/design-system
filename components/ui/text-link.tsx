@@ -17,7 +17,7 @@ const TextLink = React.forwardRef<
     <Link
       ref={ref}
       className={cn(
-        "text-base font-normal leading-[1.4] text-[#1e1e1e] font-[Inter] underline hover:text-[#2c2c2c]",
+        "text-base font-normal leading-[1.4] text-[hsl(var(--text-default))] font-[Inter] underline hover:text-[hsl(var(--text-brand))] cursor-pointer",
         className
       )}
       {...props}

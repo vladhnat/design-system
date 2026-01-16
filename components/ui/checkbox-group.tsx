@@ -60,7 +60,7 @@ const CheckboxGroup = React.forwardRef<HTMLDivElement, CheckboxGroupProps>(
           ))}
         </Flex>
         {error && (
-          <p className="text-sm font-normal leading-[1.4] text-[#ec221f] font-[Inter]">
+          <p className="text-sm font-normal leading-[1.4] text-[hsl(var(--bg-danger))] font-[Inter]">
             {error}
           </p>
         )}

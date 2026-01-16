@@ -25,8 +25,8 @@ const CheckboxField = React.forwardRef<
           ref={ref}
           id={checkboxId}
           className={cn(
-            "mt-0.5 h-4 w-4 rounded border-[#1e1e1e] data-[state=checked]:bg-[#2c2c2c] data-[state=checked]:text-[#f5f5f5]",
-            error && "border-[#ec221f]",
+            "mt-0.5 h-4 w-4 rounded border-[hsl(var(--text-default))] data-[state=checked]:bg-[hsl(var(--bg-brand))] data-[state=checked]:text-[hsl(var(--text-on-brand))]",
+            error && "border-[hsl(var(--border-danger))]",
             className
           )}
           {...props}
@@ -35,20 +35,20 @@ const CheckboxField = React.forwardRef<
           {label && (
             <Label
               htmlFor={checkboxId}
-              className="text-base font-normal leading-[1.4] text-[#1e1e1e] font-[Inter] cursor-pointer"
+              className="text-base font-normal leading-[1.4] text-[hsl(var(--text-default))] font-[Inter] cursor-pointer"
             >
               {label}
             </Label>
           )}
           {description && (
-            <p className="text-sm font-normal leading-[1.4] text-[#757575] font-[Inter]">
+            <p className="text-sm font-normal leading-[1.4] text-[hsl(var(--text-secondary))] font-[Inter]">
               {description}
             </p>
           )}
         </div>
       </div>
       {error && (
-        <p className="text-sm font-normal leading-[1.4] text-[#ec221f] font-[Inter] ml-6">
+        <p className="text-sm font-normal leading-[1.4] text-[hsl(var(--bg-danger))] font-[Inter] ml-6">
           {error}
         </p>
       )}

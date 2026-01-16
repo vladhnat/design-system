@@ -62,12 +62,12 @@ const DateInputField = React.forwardRef<HTMLDivElement, DateInputFieldProps>(
         {...props}
       >
         {label && (
-          <Label className="text-base font-normal leading-[1.4] text-[#1e1e1e] font-[Inter]">
+          <Label className="text-base font-normal leading-[1.4] text-[hsl(var(--text-default))] font-[Inter] cursor-pointer">
             {label}
           </Label>
         )}
         {description && (
-          <p className="text-base font-normal leading-[1.4] text-[#757575] font-[Inter]">
+          <p className="text-base font-normal leading-[1.4] text-[hsl(var(--text-secondary))] font-[Inter]">
             {description}
           </p>
         )}
@@ -79,8 +79,8 @@ const DateInputField = React.forwardRef<HTMLDivElement, DateInputFieldProps>(
             disabled={isDisabled}
             className={cn(
               "flex-1",
-              hasError && "border-[#ec221f]",
-              isPlaceholder && "text-[#b3b3b3]"
+              hasError && "border-[hsl(var(--border-danger))]",
+              isPlaceholder && "text-[hsl(var(--text-tertiary))]"
             )}
           />
           <Input
@@ -90,8 +90,8 @@ const DateInputField = React.forwardRef<HTMLDivElement, DateInputFieldProps>(
             disabled={isDisabled}
             className={cn(
               "flex-1",
-              hasError && "border-[#ec221f]",
-              isPlaceholder && "text-[#b3b3b3]"
+              hasError && "border-[hsl(var(--border-danger))]",
+              isPlaceholder && "text-[hsl(var(--text-tertiary))]"
             )}
           />
           <Input
@@ -101,8 +101,8 @@ const DateInputField = React.forwardRef<HTMLDivElement, DateInputFieldProps>(
             disabled={isDisabled}
             className={cn(
               "flex-1",
-              hasError && "border-[#ec221f]",
-              isPlaceholder && "text-[#b3b3b3]"
+              hasError && "border-[hsl(var(--border-danger))]",
+              isPlaceholder && "text-[hsl(var(--text-tertiary))]"
             )}
           />
         </div>

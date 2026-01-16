@@ -67,7 +67,7 @@ const PanelImage = React.forwardRef<HTMLDivElement, PanelImageProps>(
 
     return (
       <Panel ref={ref} type="full" className={className} {...props}>
-        <div className={cn("relative w-full overflow-hidden rounded-lg bg-[#E3E3E3] flex items-center justify-center", aspectRatioClasses[aspectRatio])}>
+        <div className={cn("relative w-full overflow-hidden rounded-lg bg-[hsl(var(--bg-muted))] flex items-center justify-center", aspectRatioClasses[aspectRatio])}>
           {!imageError && src ? (
             <Image
               src={src}
@@ -78,7 +78,7 @@ const PanelImage = React.forwardRef<HTMLDivElement, PanelImageProps>(
               unoptimized={src.startsWith('http')}
             />
           ) : (
-            <div className="flex flex-col items-center justify-center gap-2 text-[#757575]">
+            <div className="flex flex-col items-center justify-center gap-2 text-[hsl(var(--text-secondary))]">
               <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
@@ -116,7 +116,7 @@ const PanelImageContent = React.forwardRef<HTMLDivElement, PanelImageContentProp
     const [imageError, setImageError] = React.useState(false)
 
     const imageElement = (
-      <div className={cn("relative w-full overflow-hidden rounded-lg bg-[#E3E3E3] flex items-center justify-center", aspectRatioClasses[aspectRatio])}>
+      <div className={cn("relative w-full overflow-hidden rounded-lg bg-[hsl(var(--bg-muted))] flex items-center justify-center", aspectRatioClasses[aspectRatio])}>
         {!imageError && src ? (
           <Image
             src={src}
@@ -127,7 +127,7 @@ const PanelImageContent = React.forwardRef<HTMLDivElement, PanelImageContentProp
             unoptimized={src.startsWith('http')}
           />
         ) : (
-          <div className="flex flex-col items-center justify-center gap-2 text-[#757575]">
+          <div className="flex flex-col items-center justify-center gap-2 text-[hsl(var(--text-secondary))]">
             <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
@@ -144,7 +144,7 @@ const PanelImageContent = React.forwardRef<HTMLDivElement, PanelImageContentProp
             <TextContentHeading heading={heading} subheading={subheading} />
           )}
           {content && (
-            <div className="text-base font-normal leading-[1.4] text-[#1e1e1e] font-[Inter]">
+            <div className="text-base font-normal leading-[1.4] text-[hsl(var(--text-default))] font-[Inter]">
               {content}
             </div>
           )}
@@ -193,7 +193,7 @@ const PanelImageDouble = React.forwardRef<HTMLDivElement, PanelImageDoubleProps>
 
     return (
       <Panel ref={ref} type="half" gap="1200" className={className} {...props}>
-        <div className={cn("relative w-full overflow-hidden rounded-lg bg-[#E3E3E3] flex items-center justify-center", aspectRatioClasses[aspectRatio])}>
+        <div className={cn("relative w-full overflow-hidden rounded-lg bg-[hsl(var(--bg-muted))] flex items-center justify-center", aspectRatioClasses[aspectRatio])}>
           {!image1Error && src1 ? (
             <Image
               src={src1}
@@ -204,7 +204,7 @@ const PanelImageDouble = React.forwardRef<HTMLDivElement, PanelImageDoubleProps>
               unoptimized={src1.startsWith('http')}
             />
           ) : (
-            <div className="flex flex-col items-center justify-center gap-2 text-[#757575]">
+            <div className="flex flex-col items-center justify-center gap-2 text-[hsl(var(--text-secondary))]">
               <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
@@ -212,7 +212,7 @@ const PanelImageDouble = React.forwardRef<HTMLDivElement, PanelImageDoubleProps>
             </div>
           )}
         </div>
-        <div className={cn("relative w-full overflow-hidden rounded-lg bg-[#E3E3E3] flex items-center justify-center", aspectRatioClasses[aspectRatio])}>
+        <div className={cn("relative w-full overflow-hidden rounded-lg bg-[hsl(var(--bg-muted))] flex items-center justify-center", aspectRatioClasses[aspectRatio])}>
           {!image2Error && src2 ? (
             <Image
               src={src2}
@@ -223,7 +223,7 @@ const PanelImageDouble = React.forwardRef<HTMLDivElement, PanelImageDoubleProps>
               unoptimized={src2.startsWith('http')}
             />
           ) : (
-            <div className="flex flex-col items-center justify-center gap-2 text-[#757575]">
+            <div className="flex flex-col items-center justify-center gap-2 text-[hsl(var(--text-secondary))]">
               <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>

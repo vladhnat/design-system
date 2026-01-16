@@ -5,16 +5,16 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const calendarButtonVariants = cva(
-  "flex items-center justify-center p-4 rounded-lg size-10 text-base font-normal leading-[1.4] text-center font-[Inter] transition-colors",
+  "flex items-center justify-center p-4 rounded-lg size-10 text-base font-normal leading-[1.4] text-center font-[Inter] transition-colors cursor-pointer",
   {
     variants: {
       state: {
-        Default: "text-[#1e1e1e]",
-        Hover: "bg-[#f5f5f5] text-[#1e1e1e]",
-        Active: "bg-[#2c2c2c] text-[#f5f5f5]",
-        Disabled: "text-[#b3b3b3]",
-        Range: "bg-[#f5f5f5] text-[#2c2c2c]",
-        "Range Disabled": "bg-[#f5f5f5] text-[#b3b3b3]",
+        Default: "text-[hsl(var(--text-default))]",
+        Hover: "bg-[hsl(var(--bg-secondary))] text-[hsl(var(--text-default))]",
+        Active: "bg-[hsl(var(--bg-brand))] text-[hsl(var(--text-on-brand))]",
+        Disabled: "text-[hsl(var(--text-tertiary))]",
+        Range: "bg-[hsl(var(--bg-secondary))] text-[hsl(var(--text-brand))]",
+        "Range Disabled": "bg-[hsl(var(--bg-secondary))] text-[hsl(var(--text-tertiary))]",
         Hidden: "opacity-0 pointer-events-none",
       },
     },

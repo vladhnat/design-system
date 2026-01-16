@@ -20,7 +20,7 @@ const Search = React.forwardRef<HTMLInputElement, SearchProps>(
           className={cn("pr-10", className)}
           {...props}
         />
-        <SearchIcon className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#1e1e1e] pointer-events-none" />
+        <SearchIcon className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[hsl(var(--icon-default))] pointer-events-none" />
       </div>
     )
   }

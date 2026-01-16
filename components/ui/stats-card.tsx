@@ -15,16 +15,16 @@ const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps>(
       <div
         ref={ref}
         className={cn(
-          "flex flex-col gap-2 p-6 rounded-lg border border-[#d9d9d9] bg-[#ffffff]",
+          "flex flex-col gap-2 p-6 rounded-lg border border-[hsl(var(--border-default))] bg-[hsl(var(--bg-default))]",
           className
         )}
         {...props}
       >
         {icon && <div className="flex items-center">{icon}</div>}
-        <div className="text-2xl font-semibold leading-[1.2] tracking-[-0.02em] text-[#1e1e1e] font-[Inter]">
+        <div className="text-2xl font-semibold leading-[1.2] tracking-[-0.02em] text-[hsl(var(--text-default))] font-[Inter]">
           {stat}
         </div>
-        <p className="text-base font-normal leading-[1.4] text-[#1e1e1e] font-[Inter]">
+        <p className="text-base font-normal leading-[1.4] text-[hsl(var(--text-default))] font-[Inter]">
           {description}
         </p>
       </div>

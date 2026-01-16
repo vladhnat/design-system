@@ -4,12 +4,12 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const cardVariants = cva(
-  "rounded-lg bg-[#ffffff] text-[#1e1e1e]",
+  "rounded-lg bg-[hsl(var(--bg-default))] text-[hsl(var(--text-default))]",
   {
     variants: {
       variant: {
-        default: "border border-[#d9d9d9] shadow-sm",
-        stroke: "border border-[#d9d9d9]",
+        default: "border border-[hsl(var(--border-default))] shadow-sm",
+        stroke: "border border-[hsl(var(--border-default))]",
       },
       direction: {
         vertical: "flex flex-col",
@@ -37,7 +37,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
           <div className={cn(
             direction === "horizontal" ? "flex-shrink-0" : "w-full",
             direction === "horizontal" ? "w-40 h-40" : "aspect-square",
-            "relative rounded-lg overflow-hidden bg-[#E3E3E3]"
+            "relative rounded-lg overflow-hidden bg-[hsl(var(--bg-muted))]"
           )}>
             {asset}
           </div>
@@ -78,7 +78,7 @@ const CardTitle = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "text-2xl font-semibold leading-none tracking-tight text-[#1e1e1e] font-[Inter]",
+      "text-2xl font-semibold leading-none tracking-tight text-[hsl(var(--text-default))] font-[Inter]",
       className
     )}
     {...props}
@@ -92,7 +92,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("text-sm font-normal leading-[1.4] text-[#757575] font-[Inter]", className)}
+    className={cn("text-sm font-normal leading-[1.4] text-[hsl(var(--text-secondary))] font-[Inter]", className)}
     {...props}
   />
 ))

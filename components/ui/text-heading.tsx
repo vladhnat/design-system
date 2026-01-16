@@ -12,7 +12,7 @@ const TextHeading = React.forwardRef<HTMLHeadingElement, TextHeadingProps>(
       <Component
         ref={ref}
         className={cn(
-          "text-2xl font-semibold leading-[1.2] tracking-[-0.02em] text-[#1e1e1e] font-[Inter]",
+          "text-2xl font-semibold leading-[1.2] tracking-[-0.02em] text-[hsl(var(--text-default))] font-[Inter]",
           className
         )}
         {...props}

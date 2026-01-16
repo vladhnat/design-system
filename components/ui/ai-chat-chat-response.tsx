@@ -23,7 +23,7 @@ const AiChatChatResponse = React.forwardRef<
       {...props}
     >
       {icon && <div className="h-5 w-5 shrink-0 mt-0.5">{icon}</div>}
-      <p className="flex-1 text-base font-normal leading-[1.4] text-[#1e1e1e] font-[Inter]">
+      <p className="flex-1 text-base font-normal leading-[1.4] text-[hsl(var(--text-default))] font-[Inter]">
         {message}
       </p>
     </div>

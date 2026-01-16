@@ -26,11 +26,11 @@ const AvatarBlock = React.forwardRef<HTMLDivElement, AvatarBlockProps>(
           {fallback && <AvatarFallback>{fallback}</AvatarFallback>}
         </Avatar>
         <div className="flex flex-col">
-          <div className="text-base font-semibold leading-[1.4] text-[#303030] font-[Inter]">
+          <div className="text-base font-semibold leading-[1.4] text-[hsl(var(--text-default))] font-[Inter]">
             {title}
           </div>
           {description && (
-            <div className="text-base font-normal leading-[1.4] text-[#757575] font-[Inter]">
+            <div className="text-base font-normal leading-[1.4] text-[hsl(var(--text-secondary))] font-[Inter]">
               {description}
             </div>
           )}

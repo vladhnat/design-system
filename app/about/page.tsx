@@ -35,7 +35,7 @@ function PlaceholderImage({ src, alt, aspectRatio = '1-1' }: { src: string; alt:
 
   if (imageError) {
     return (
-      <div className={cn("absolute inset-0 flex flex-col items-center justify-center gap-2 text-[#757575] bg-[#E3E3E3]", aspectRatioClasses[aspectRatio])}>
+      <div className={cn("absolute inset-0 flex flex-col items-center justify-center gap-2 text-[hsl(var(--text-secondary))] bg-[hsl(var(--bg-muted))]", aspectRatioClasses[aspectRatio])}>
         <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
         </svg>
@@ -63,7 +63,7 @@ function CardImage({ src, alt, aspectRatio = '1-1' }: { src: string; alt: string
 
 export default function AboutPage() {
   return (
-    <div className="bg-[#ffffff] min-h-screen flex flex-col">
+    <div className="bg-[hsl(var(--bg-default))] min-h-screen flex flex-col">
       <Header
         logo="Brand"
         navItems={[
@@ -102,10 +102,10 @@ export default function AboutPage() {
       <Section padding="1600">
         <div className="container mx-auto px-4">
           <Panel type="half" gap="1200">
-            <div className="relative w-full overflow-hidden rounded-lg bg-[#E3E3E3] aspect-[4/3]">
+            <div className="relative w-full overflow-hidden rounded-lg bg-[hsl(var(--bg-muted))] aspect-[4/3]">
               <PlaceholderImage src={placeholderImage} alt="Always use image alt" aspectRatio="4-3" />
             </div>
-            <div className="relative w-full overflow-hidden rounded-lg bg-[#E3E3E3] aspect-[4/3]">
+            <div className="relative w-full overflow-hidden rounded-lg bg-[hsl(var(--bg-muted))] aspect-[4/3]">
               <PlaceholderImage src={placeholderImage} alt="Always use image alt" aspectRatio="4-3" />
             </div>
           </Panel>

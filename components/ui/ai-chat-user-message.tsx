@@ -21,8 +21,8 @@ const AiChatUserMessage = React.forwardRef<
       )}
       {...props}
     >
-      <div className="bg-[#f5f5f5] border border-[#d9d9d9] rounded-lg px-2 py-1.5 max-w-[480px]">
-        <p className="text-base font-normal leading-[1.4] text-[#1e1e1e] font-[Inter]">
+      <div className="bg-[hsl(var(--bg-secondary))] border border-[hsl(var(--border-default))] rounded-lg px-2 py-1.5 max-w-[480px]">
+        <p className="text-base font-normal leading-[1.4] text-[hsl(var(--text-default))] font-[Inter]">
           {message}
         </p>
       </div>

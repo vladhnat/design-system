@@ -26,7 +26,7 @@ const Header = React.forwardRef<HTMLElement, HeaderProps>(
       <header
         ref={ref}
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 w-full border-b border-[#d9d9d9] bg-[#ffffff]",
+          "fixed top-0 left-0 right-0 z-50 w-full border-b border-[hsl(var(--border-default))] bg-[hsl(var(--bg-default))]",
           className
         )}
         {...props}
@@ -36,7 +36,7 @@ const Header = React.forwardRef<HTMLElement, HeaderProps>(
             {logo && (
               <div className="flex items-center">
                 {typeof logo === "string" ? (
-                  <Link href="/" className="text-base font-semibold leading-[1.4] text-[#1e1e1e] font-[Inter]">
+                  <Link href="/" className="text-base font-semibold leading-[1.4] text-[hsl(var(--text-default))] font-[Inter] cursor-pointer">
                     {logo}
                   </Link>
                 ) : (
@@ -54,16 +54,16 @@ const Header = React.forwardRef<HTMLElement, HeaderProps>(
                     : pathname === item.href || pathname?.startsWith(item.href + '/')
                   
                   return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className={cn(
-                        "text-base font-normal leading-[1.4] text-[#1e1e1e] font-[Inter] transition-colors px-3 py-1.5 rounded-lg",
-                        isActive
-                          ? "bg-[#f5f5f5] text-[#1e1e1e]"
-                          : "hover:text-[#2c2c2c]"
-                      )}
-                    >
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={cn(
+                      "text-base font-normal leading-[1.4] text-[hsl(var(--text-default))] font-[Inter] transition-colors px-3 py-1.5 rounded-lg cursor-pointer",
+                      isActive
+                        ? "bg-[hsl(var(--bg-secondary))] text-[hsl(var(--text-default))]"
+                        : "hover:text-[hsl(var(--text-brand))]"
+                    )}
+                  >
                       {item.label}
                     </Link>
                   )

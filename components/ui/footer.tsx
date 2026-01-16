@@ -33,7 +33,7 @@ const Footer = React.forwardRef<HTMLElement, FooterProps>(
       <footer
         ref={ref}
         className={cn(
-          "w-full border-t border-[#d9d9d9] bg-[#ffffff] relative z-10 overflow-visible",
+          "w-full border-t border-[hsl(var(--border-default))] bg-[hsl(var(--bg-default))] relative z-10 overflow-visible",
           className
         )}
         {...props}
@@ -44,7 +44,7 @@ const Footer = React.forwardRef<HTMLElement, FooterProps>(
               {logo && (
                 <div className="flex flex-col gap-4">
                   {typeof logo === "string" ? (
-                    <div className="text-base font-semibold leading-[1.4] text-[#1e1e1e] font-[Inter]">
+                    <div className="text-base font-semibold leading-[1.4] text-[hsl(var(--text-default))] font-[Inter]">
                       {logo}
                     </div>
                   ) : (
@@ -56,7 +56,7 @@ const Footer = React.forwardRef<HTMLElement, FooterProps>(
                         <Link
                           key={link.href}
                           href={link.href}
-                          className="text-[#757575] hover:text-[#1e1e1e] transition-colors"
+                          className="text-[hsl(var(--text-secondary))] hover:text-[hsl(var(--text-default))] transition-colors cursor-pointer"
                           aria-label={link.label}
                         >
                           {link.icon || link.label}
@@ -68,7 +68,7 @@ const Footer = React.forwardRef<HTMLElement, FooterProps>(
               )}
               {columns?.map((column, index) => (
                 <div key={index} className="flex flex-col gap-4">
-                  <h3 className="text-base font-semibold leading-[1.4] text-[#1e1e1e] font-[Inter]">
+                  <h3 className="text-base font-semibold leading-[1.4] text-[hsl(var(--text-default))] font-[Inter]">
                     {column.title}
                   </h3>
                   <nav className="flex flex-col gap-2">
@@ -76,7 +76,7 @@ const Footer = React.forwardRef<HTMLElement, FooterProps>(
                       <Link
                         key={link.href}
                         href={link.href}
-                        className="text-base font-normal leading-[1.4] text-[#757575] font-[Inter] hover:text-[#1e1e1e] transition-colors"
+                        className="text-base font-normal leading-[1.4] text-[hsl(var(--text-secondary))] font-[Inter] hover:text-[hsl(var(--text-default))] transition-colors cursor-pointer"
                       >
                         {link.label}
                       </Link>
@@ -87,8 +87,8 @@ const Footer = React.forwardRef<HTMLElement, FooterProps>(
             </div>
           )}
           {copyright && (
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-8 border-t border-[#d9d9d9]">
-              <p className="text-base font-normal leading-[1.4] text-[#757575] font-[Inter]">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-8 border-t border-[hsl(var(--border-default))]">
+              <p className="text-base font-normal leading-[1.4] text-[hsl(var(--text-secondary))] font-[Inter]">
                 {copyright}
               </p>
             </div>

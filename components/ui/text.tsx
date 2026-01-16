@@ -11,7 +11,7 @@ const Text = React.forwardRef<HTMLParagraphElement, TextProps>(
       <Component
         ref={ref}
         className={cn(
-          "text-base font-normal leading-[1.4] text-[#1e1e1e] font-[Inter]",
+          "text-base font-normal leading-[1.4] text-[hsl(var(--text-default))] font-[Inter]",
           className
         )}
         {...props}

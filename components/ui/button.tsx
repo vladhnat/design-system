@@ -5,18 +5,18 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-base font-normal ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 font-[Inter]",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-base font-normal ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 font-[Inter]",
   {
     variants: {
       variant: {
-        default: "bg-[#2c2c2c] text-[#f5f5f5] hover:bg-[#2c2c2c]/90 border border-[#2c2c2c]",
+        default: "bg-[hsl(var(--bg-brand))] text-[hsl(var(--text-on-brand))] hover:bg-[hsl(var(--bg-brand))]/90 border border-[hsl(var(--border-brand))]",
         destructive:
-          "bg-[#ec221f] text-[#fee9e7] hover:bg-[#ec221f]/90 border border-[#c00f0c]",
+          "bg-[hsl(var(--bg-danger))] text-[hsl(var(--text-on-danger))] hover:bg-[hsl(var(--bg-danger))]/90 border border-[hsl(var(--border-danger))]",
         outline:
-          "border border-[#2c2c2c] bg-background hover:bg-accent hover:text-accent-foreground",
+          "border border-[hsl(var(--border-brand))] bg-background hover:bg-accent hover:text-accent-foreground",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        subtle: "bg-[#f5f5f5] text-[#303030] hover:bg-[#f5f5f5]/90 border border-[#d9d9d9]",
+        subtle: "bg-[hsl(var(--bg-secondary))] text-[hsl(var(--text-default))] hover:bg-[hsl(var(--bg-secondary))]/90 border border-[hsl(var(--border-default))]",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
       },

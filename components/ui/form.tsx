@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils"
 const formVariants = cva("flex", {
   variants: {
     singleLine: {
-      true: "items-center gap-0 rounded-lg border border-[#d9d9d9] bg-[#ffffff] overflow-hidden",
+      true: "items-center gap-0 rounded-lg border border-[hsl(var(--border-default))] bg-[hsl(var(--bg-default))] overflow-hidden",
       false: "flex-col gap-6",
     },
   },

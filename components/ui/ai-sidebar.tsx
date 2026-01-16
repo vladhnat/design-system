@@ -43,7 +43,7 @@ const AiSidebar = React.forwardRef<HTMLDivElement, AiSidebarProps>(
       <div
         ref={ref}
         className={cn(
-          "flex flex-col gap-4 h-full p-4 bg-[#f5f5f5] border-r border-[#d9d9d9] w-[320px] shrink-0",
+          "flex flex-col gap-4 h-full p-4 bg-[hsl(var(--bg-secondary))] border-r border-[hsl(var(--border-default))] w-[320px] shrink-0",
           className
         )}
         {...props}
@@ -55,9 +55,9 @@ const AiSidebar = React.forwardRef<HTMLDivElement, AiSidebarProps>(
             size="icon"
             className="h-6 w-6 rounded-full p-0 hover:bg-transparent"
           >
-            <Menu className="h-6 w-6 text-[#1e1e1e]" />
+            <Menu className="h-6 w-6 text-[hsl(var(--icon-default))]" />
           </Button>
-          <h2 className="flex-1 text-base font-semibold leading-[1.4] text-[#1e1e1e] font-[Inter]">
+          <h2 className="flex-1 text-base font-semibold leading-[1.4] text-[hsl(var(--text-default))] font-[Inter]">
             {title}
           </h2>
           {onNewChat && (
@@ -67,7 +67,7 @@ const AiSidebar = React.forwardRef<HTMLDivElement, AiSidebarProps>(
               onClick={onNewChat}
               className="h-6 w-6 rounded-full p-0 hover:bg-transparent"
             >
-              <PlusCircle className="h-6 w-6 text-[#1e1e1e]" />
+              <PlusCircle className="h-6 w-6 text-[hsl(var(--icon-default))]" />
             </Button>
           )}
         </div>
@@ -77,7 +77,7 @@ const AiSidebar = React.forwardRef<HTMLDivElement, AiSidebarProps>(
 
         {/* Chat List */}
         <div className="flex flex-col gap-2 flex-1 overflow-y-auto">
-          <p className="text-sm font-semibold leading-[1.4] text-[#757575] font-[Inter]">
+          <p className="text-sm font-semibold leading-[1.4] text-[hsl(var(--text-secondary))] font-[Inter]">
             Chats
           </p>
           <div className="flex flex-col gap-0">
@@ -85,13 +85,13 @@ const AiSidebar = React.forwardRef<HTMLDivElement, AiSidebarProps>(
               <button
                 key={chat.id}
                 className={cn(
-                  "flex gap-4 items-center px-1.5 py-1 rounded-lg text-left transition-colors",
+                  "flex gap-4 items-center px-1.5 py-1 rounded-lg text-left transition-colors cursor-pointer",
                   chat.active
-                    ? "bg-[#ffffff]"
-                    : "hover:bg-[#ffffff]/50"
+                    ? "bg-[hsl(var(--bg-default))]"
+                    : "hover:bg-[hsl(var(--bg-default))]/50"
                 )}
               >
-                <span className="flex-1 text-base font-normal leading-[1.4] text-[#1e1e1e] font-[Inter]">
+                <span className="flex-1 text-base font-normal leading-[1.4] text-[hsl(var(--text-default))] font-[Inter]">
                   {chat.title}
                 </span>
               </button>
@@ -106,7 +106,7 @@ const AiSidebar = React.forwardRef<HTMLDivElement, AiSidebarProps>(
               {user.avatar && <AvatarImage src={user.avatar} alt={user.name || user.email} />}
               {user.fallback && <AvatarFallback>{user.fallback}</AvatarFallback>}
             </Avatar>
-            <span className="flex-1 text-base font-normal leading-[1.4] text-[#1e1e1e] font-[Inter]">
+            <span className="flex-1 text-base font-normal leading-[1.4] text-[hsl(var(--text-default))] font-[Inter]">
               {user.email || user.name}
             </span>
           </div>

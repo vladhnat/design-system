@@ -7,12 +7,12 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 
 const aiChatBoxVariants = cva(
-  "flex flex-col gap-6 p-4 rounded-2xl border border-[#d9d9d9] bg-[#ffffff]",
+  "flex flex-col gap-6 p-4 rounded-2xl border border-[hsl(var(--border-default))] bg-[hsl(var(--bg-default))]",
   {
     variants: {
       state: {
         Default: "",
-        Active: "border-[#2c2c2c]",
+        Active: "border-[hsl(var(--border-brand))]",
       },
     },
     defaultVariants: {
@@ -66,7 +66,7 @@ const AiChatBox = React.forwardRef<HTMLDivElement, AiChatBoxProps>(
           placeholder={placeholder}
           disabled={disabled}
           className={cn(
-            "w-full resize-none border-0 bg-transparent text-base font-normal leading-[1.4] text-[#1e1e1e] font-[Inter] placeholder:text-[#b3b3b3] focus-visible:outline-none",
+            "w-full resize-none border-0 bg-transparent text-base font-normal leading-[1.4] text-[hsl(var(--text-default))] font-[Inter] placeholder:text-[hsl(var(--text-tertiary))] focus-visible:outline-none",
             "min-h-[22px]"
           )}
           rows={1}
@@ -81,7 +81,7 @@ const AiChatBox = React.forwardRef<HTMLDivElement, AiChatBoxProps>(
               disabled={disabled}
               className="h-8 w-8 rounded-full p-2 hover:bg-transparent"
             >
-              <Image className="h-5 w-5 text-[#1e1e1e]" />
+              <Image className="h-5 w-5 text-[hsl(var(--icon-default))]" />
             </Button>
             <Button
               type="button"
@@ -91,7 +91,7 @@ const AiChatBox = React.forwardRef<HTMLDivElement, AiChatBoxProps>(
               disabled={disabled}
               className="h-8 w-8 rounded-full p-2 hover:bg-transparent"
             >
-              <Code className="h-5 w-5 text-[#1e1e1e]" />
+              <Code className="h-5 w-5 text-[hsl(var(--icon-default))]" />
             </Button>
             <Button
               type="button"
@@ -101,7 +101,7 @@ const AiChatBox = React.forwardRef<HTMLDivElement, AiChatBoxProps>(
               disabled={disabled}
               className="h-8 w-8 rounded-full p-2 hover:bg-transparent"
             >
-              <Mic className="h-5 w-5 text-[#1e1e1e]" />
+              <Mic className="h-5 w-5 text-[hsl(var(--icon-default))]" />
             </Button>
           </div>
           <Button
@@ -113,16 +113,16 @@ const AiChatBox = React.forwardRef<HTMLDivElement, AiChatBoxProps>(
             className={cn(
               "h-8 w-8 rounded-full p-2",
               disabled || !value?.trim()
-                ? "bg-[#d9d9d9] border border-[#b3b3b3]"
-                : "bg-[#2c2c2c] hover:bg-[#2c2c2c]/90"
+                ? "bg-[hsl(var(--bg-disabled))] border border-[hsl(var(--border-disabled))]"
+                : "bg-[hsl(var(--bg-brand))] hover:bg-[hsl(var(--bg-brand))]/90"
             )}
           >
             <ArrowUp
               className={cn(
                 "h-5 w-5",
                 disabled || !value?.trim()
-                  ? "text-[#b3b3b3]"
-                  : "text-[#f5f5f5]"
+                  ? "text-[hsl(var(--text-disabled))]"
+                  : "text-[hsl(var(--text-on-brand))]"
               )}
             />
           </Button>

@@ -21,21 +21,21 @@ const AiChatCodeBlock = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        "flex items-start border border-[#d9d9d9] rounded-2xl overflow-hidden w-full",
+        "flex items-start border border-[hsl(var(--border-default))] rounded-2xl overflow-hidden w-full",
         className
       )}
       {...props}
     >
       {lineNumbers && (
-        <div className="bg-[#ffffff] border-r border-[#d9d9d9] px-2 py-4 w-12 shrink-0">
-          <div className="font-mono text-base font-normal leading-[1.3] text-[#b3b3b3] text-right">
+        <div className="bg-[hsl(var(--bg-default))] border-r border-[hsl(var(--border-default))] px-2 py-4 w-12 shrink-0">
+          <div className="font-mono text-base font-normal leading-[1.3] text-[hsl(var(--text-tertiary))] text-right">
             {Array.from({ length: lineCount }, (_, i) => (
               <div key={i}>{i + 1}</div>
             ))}
           </div>
         </div>
       )}
-      <div className="bg-[#f5f5f5] border-r border-[#d9d9d9] px-2 py-4 flex-1 overflow-x-auto">
+      <div className="bg-[hsl(var(--bg-secondary))] border-r border-[hsl(var(--border-default))] px-2 py-4 flex-1 overflow-x-auto">
         <pre className="font-mono text-base font-normal leading-[1.3] text-[#abb2bf] m-0">
           <code>{code}</code>
         </pre>

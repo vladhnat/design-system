@@ -18,9 +18,9 @@ const heroVariants = cva(
   {
     variants: {
       variant: {
-        subtle: "bg-[#f5f5f5]",
+        subtle: "bg-[hsl(var(--bg-secondary))]",
         image: "relative bg-cover bg-center",
-        default: "bg-[#ffffff]",
+        default: "bg-[hsl(var(--bg-default))]",
       },
     },
     defaultVariants: {
@@ -66,7 +66,7 @@ const Hero = React.forwardRef<HTMLDivElement, HeroProps>(
         )}
         <div className={cn(
           "relative z-10 flex flex-col items-center gap-6 max-w-4xl w-full",
-          variant === "image" && "text-[#ffffff]"
+          variant === "image" && "text-white"
         )}>
           {title && (
             <TextContentTitle

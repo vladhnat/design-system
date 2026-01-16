@@ -15,7 +15,7 @@ const Logo = React.forwardRef<SVGSVGElement, LogoProps>(
         viewBox="0 0 32 32"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className={cn("text-[#1e1e1e]", className)}
+        className={cn("text-[hsl(var(--icon-default))]", className)}
         {...props}
       >
         {/* Stylized 'B' with three interconnected rounded loops */}

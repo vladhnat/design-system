@@ -53,7 +53,7 @@ const TagToggleGroup = React.forwardRef<HTMLDivElement, TagToggleGroupProps>(
         {...props}
       >
         {label && (
-          <Label className="text-base font-normal leading-[1.4] text-[#1e1e1e] font-[Inter]">
+          <Label className="text-base font-normal leading-[1.4] text-[hsl(var(--text-default))] font-[Inter]">
             {label}
           </Label>
         )}

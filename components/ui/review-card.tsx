@@ -21,7 +21,7 @@ const ReviewCard = React.forwardRef<HTMLDivElement, ReviewCardProps>(
       <div
         ref={ref}
         className={cn(
-          "flex flex-col gap-4 p-6 rounded-lg border border-[#d9d9d9] bg-[#ffffff]",
+          "flex flex-col gap-4 p-6 rounded-lg border border-[hsl(var(--border-default))] bg-[hsl(var(--bg-default))]",
           className
         )}
         {...props}
@@ -32,16 +32,16 @@ const ReviewCard = React.forwardRef<HTMLDivElement, ReviewCardProps>(
               key={i}
               className={cn(
                 "h-4 w-4",
-                i < stars ? "fill-[#2c2c2c] text-[#2c2c2c]" : "fill-none text-[#d9d9d9]"
+                i < stars ? "fill-[hsl(var(--bg-brand))] text-[hsl(var(--bg-brand))]" : "fill-none text-[hsl(var(--border-default))]"
               )}
             />
           ))}
         </div>
         <div className="flex flex-col gap-2">
-          <h3 className="text-base font-semibold leading-[1.4] text-[#1e1e1e] font-[Inter]">
+          <h3 className="text-base font-semibold leading-[1.4] text-[hsl(var(--text-default))] font-[Inter]">
             {title}
           </h3>
-          <p className="text-base font-normal leading-[1.4] text-[#1e1e1e] font-[Inter]">
+          <p className="text-base font-normal leading-[1.4] text-[hsl(var(--text-default))] font-[Inter]">
             {body}
           </p>
         </div>
@@ -51,10 +51,10 @@ const ReviewCard = React.forwardRef<HTMLDivElement, ReviewCardProps>(
             {fallback && <AvatarFallback>{fallback}</AvatarFallback>}
           </Avatar>
           <div className="flex flex-col">
-            <div className="text-base font-semibold leading-[1.4] text-[#303030] font-[Inter]">
+            <div className="text-base font-semibold leading-[1.4] text-[hsl(var(--text-default))] font-[Inter]">
               {name}
             </div>
-            <div className="text-base font-normal leading-[1.4] text-[#757575] font-[Inter]">
+            <div className="text-base font-normal leading-[1.4] text-[hsl(var(--text-secondary))] font-[Inter]">
               {date}
             </div>
           </div>

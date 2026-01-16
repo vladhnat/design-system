@@ -18,10 +18,10 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
     return (
       <div className="flex flex-col gap-1">
         {label && (
-          <Label
-            htmlFor={inputId}
-            className="text-base font-semibold leading-[1.4] text-[#1e1e1e] font-[Inter]"
-          >
+            <Label
+              htmlFor={inputId}
+              className="text-base font-semibold leading-[1.4] text-[hsl(var(--text-default))] font-[Inter] cursor-pointer"
+            >
             {label}
           </Label>
         )}
@@ -29,14 +29,14 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
           ref={ref}
           id={inputId}
           className={cn(
-            "h-10 rounded-lg border border-[#d9d9d9] bg-[#ffffff] px-3 py-2 text-base font-normal leading-[1.4] text-[#1e1e1e] font-[Inter] placeholder:text-[#b3b3b3] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2c2c2c] focus-visible:ring-offset-2",
-            error && "border-[#ec221f]",
+            "h-10 rounded-lg border border-[hsl(var(--border-default))] bg-[hsl(var(--bg-default))] px-3 py-2 text-base font-normal leading-[1.4] text-[hsl(var(--text-default))] font-[Inter] placeholder:text-[hsl(var(--text-tertiary))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--bg-brand))] focus-visible:ring-offset-2",
+            error && "border-[hsl(var(--border-danger))]",
             className
           )}
           {...props}
         />
         {error && (
-          <p className="text-sm font-normal leading-[1.4] text-[#ec221f] font-[Inter]">
+          <p className="text-sm font-normal leading-[1.4] text-[hsl(var(--bg-danger))] font-[Inter]">
             {error}
           </p>
         )}

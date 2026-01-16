@@ -11,10 +11,10 @@ const tagVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-[#2c2c2c] text-[#f5f5f5]",
-        secondary: "bg-[#f5f5f5] text-[#303030]",
-        destructive: "bg-[#ec221f] text-[#fee9e7]",
-        outline: "border border-[#d9d9d9] bg-transparent text-[#1e1e1e]",
+        default: "bg-[hsl(var(--bg-brand))] text-[hsl(var(--text-on-brand))]",
+        secondary: "bg-[hsl(var(--bg-secondary))] text-[hsl(var(--text-default))]",
+        destructive: "bg-[hsl(var(--bg-danger))] text-[hsl(var(--text-on-danger))]",
+        outline: "border border-[hsl(var(--border-default))] bg-transparent text-[hsl(var(--text-default))]",
       },
       scheme: {
         neutral: "",
